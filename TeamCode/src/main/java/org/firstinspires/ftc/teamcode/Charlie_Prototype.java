@@ -37,6 +37,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -61,7 +63,7 @@ public class Charlie_Prototype extends OpMode
 
      private DcMotor leftMotor = null;
      private DcMotor rightMotor = null;
-
+     private LightSensor lightSensor = null;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -73,10 +75,13 @@ public class Charlie_Prototype extends OpMode
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-         leftMotor  = hardwareMap.dcMotor.get("left motor");
-         rightMotor = hardwareMap.dcMotor.get("right motor");
+         leftMotor  = hardwareMap.dcMotor.get("leftMotor");
+         rightMotor = hardwareMap.dcMotor.get("rightMotor");
+         rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+         lightSensor = hardwareMap.lightSensor.get("lightSensor");}
 
-        // eg: Set the drive motor directions:
+
+    // eg: Set the  ve motor directions:
         // Reverse the motor that runs backwards when connected directly to the battery
         // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         //  rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
@@ -108,7 +113,7 @@ public class Charlie_Prototype extends OpMode
         // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
          leftMotor.setPower(.25);
          rightMotor.setPower(.25);
-    }
+
 
     /*
      * Code to run ONCE after the driver hits STOP
