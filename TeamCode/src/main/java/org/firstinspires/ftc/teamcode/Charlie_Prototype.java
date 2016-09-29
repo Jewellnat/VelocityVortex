@@ -38,7 +38,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.LightSensor;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -63,7 +63,7 @@ public class Charlie_Prototype extends OpMode
 
      private DcMotor leftMotor = null;
      private DcMotor rightMotor = null;
-     private LightSensor lightSensor = null;
+     private ColorSensor ColorSensor = null;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -78,7 +78,7 @@ public class Charlie_Prototype extends OpMode
          leftMotor  = hardwareMap.dcMotor.get("leftMotor");
          rightMotor = hardwareMap.dcMotor.get("rightMotor");
          rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-         lightSensor = hardwareMap.lightSensor.get("lightSensor");}
+         ColorSensor = hardwareMap.colorSensor.get("colorSensor");}
 
 
     // eg: Set the  ve motor directions:
@@ -86,7 +86,7 @@ public class Charlie_Prototype extends OpMode
         // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         //  rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
         // telemetry.addData("Status", "Initialized");
-    }
+
 
     /*
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
@@ -110,16 +110,26 @@ public class Charlie_Prototype extends OpMode
     public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
 
+        int lightAlpha = ColorSensor.alpha();
+        telemetry.addData("ColorSensor Alpha: ", lightAlpha);
+
+        if (lightAlpha > 15) {
+            leftMotor.setPower(1);
+            rightMotor.setPower(.05);
+        } else {
+            leftMotor.setPower(.05);
+            rightMotor.setPower(1);
+        }
         // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
-         leftMotor.setPower(.25);
-         rightMotor.setPower(.25);
 
 
     /*
      * Code to run ONCE after the driver hits STOP
      */
-    @Override
-    public void stop() {
-    }
 
-}
+
+
+
+
+        }
+    }
