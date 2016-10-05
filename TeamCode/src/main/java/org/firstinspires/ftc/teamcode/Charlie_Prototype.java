@@ -40,7 +40,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
+import com.qualcomm.robotcore.hardware.GyroSensor;
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
@@ -64,6 +64,7 @@ public class Charlie_Prototype extends OpMode
      private DcMotor leftMotor = null;
      private DcMotor rightMotor = null;
      private ColorSensor ColorSensor = null;
+     private GyroSensor gyro = null;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -75,18 +76,18 @@ public class Charlie_Prototype extends OpMode
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-         leftMotor  = hardwareMap.dcMotor.get("leftMotor");
-         rightMotor = hardwareMap.dcMotor.get("rightMotor");
-         rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-         ColorSensor = hardwareMap.colorSensor.get("colorSensor");}
-
-
-    // eg: Set the  ve motor directions:
+        leftMotor = hardwareMap.dcMotor.get("leftMotor");
+        rightMotor = hardwareMap.dcMotor.get("rightMotor");
+        rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        ColorSensor = hardwareMap.colorSensor.get("colorSensor");
+        gyro = hardwareMap.gyroSensor.get("gyroSensor");
+        gyro.calibrate();
+        // eg: Set the  ve motor directions:
         // Reverse the motor that runs backwards when connected directly to the battery
         // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         //  rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
         // telemetry.addData("Status", "Initialized");
-
+    }
 
     /*
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
@@ -110,8 +111,8 @@ public class Charlie_Prototype extends OpMode
     public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
 
-        int lightAlpha = ColorSensor.alpha();
-        telemetry.addData("ColorSensor Alpha: ", lightAlpha);
+       int lightAlpha = ColorSensor.alpha();
+       telemetry.addData("ColorSensor Alpha: ", lightAlpha);
 
         if (lightAlpha > 15) {
             leftMotor.setPower(1);
@@ -120,9 +121,16 @@ public class Charlie_Prototype extends OpMode
             leftMotor.setPower(.05);
             rightMotor.setPower(1);
         }
-        // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
 
-
+        /*int gyroValue = gyro.getHeading();
+        if (gyroValue < 90) {
+            leftMotor.setPower(.5);
+            rightMotor.setPower(-.5);
+        }
+        else{
+            leftMotor.setPower(0);
+            rightMotor.setPower(0);
+        }*/
     /*
      * Code to run ONCE after the driver hits STOP
      */
