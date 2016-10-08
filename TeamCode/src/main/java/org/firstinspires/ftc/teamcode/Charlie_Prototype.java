@@ -39,8 +39,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.GyroSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -65,7 +67,7 @@ public class Charlie_Prototype extends OpMode {
     private DcMotor rightMotor = null;
     private ColorSensor ColorSensor = null;
     private GyroSensor gyro = null;
-
+    private OpticalDistanceSensor far = null;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -82,6 +84,7 @@ public class Charlie_Prototype extends OpMode {
         rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         ColorSensor = hardwareMap.colorSensor.get("colorSensor");
         gyro = hardwareMap.gyroSensor.get("gyroSensor");
+        far = hardwareMap.opticalDistanceSensor.get("far");
         gyro.calibrate();
         // eg: Set the  ve motor directions:
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -114,7 +117,7 @@ public class Charlie_Prototype extends OpMode {
         int lightAlpha = ColorSensor.alpha();
         telemetry.addData("ColorSensor Alpha: ", lightAlpha);
         telemetry.addData("state: ", state);
-
+        int distance = far
         if (state == 1) {
             leftMotor.setPower(1);
             rightMotor.setPower(1);
