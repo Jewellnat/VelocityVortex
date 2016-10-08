@@ -41,30 +41,31 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.GyroSensor;
+
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
  * The names of OpModes appear on the menu of the FTC Driver Station.
  * When an selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
- *
+ * <p>
  * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
  * It includes all the skeletal structure that all iterative OpModes contain.
- *
+ * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Prototype", group="")  // @Autonomous(...) is the other common choice
-public class Charlie_Prototype extends OpMode
-{
+@Autonomous(name = "Prototype", group = "")  // @Autonomous(...) is the other common choice
+public class Charlie_Prototype extends OpMode {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
+    private int state = 1;
+    private DcMotor leftMotor = null;
+    private DcMotor rightMotor = null;
+    private ColorSensor ColorSensor = null;
+    private GyroSensor gyro = null;
 
-     private DcMotor leftMotor = null;
-     private DcMotor rightMotor = null;
-     private ColorSensor ColorSensor = null;
-     private GyroSensor gyro = null;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -94,6 +95,7 @@ public class Charlie_Prototype extends OpMode
      */
     @Override
     public void init_loop() {
+        state = 1;
     }
 
     /*
@@ -109,35 +111,71 @@ public class Charlie_Prototype extends OpMode
      */
     @Override
     public void loop() {
-        telemetry.addData("Status", "Running: " + runtime.toString());
+        int lightAlpha = ColorSensor.alpha();
+        telemetry.addData("ColorSensor Alpha: ", lightAlpha);
+        telemetry.addData("state: ", state);
 
-       int lightAlpha = ColorSensor.alpha();
-       telemetry.addData("ColorSensor Alpha: ", lightAlpha);
-
-        if (lightAlpha > 15) {
+        if (state == 1) {
             leftMotor.setPower(1);
-            rightMotor.setPower(.05);
-        } else {
-            leftMotor.setPower(.05);
             rightMotor.setPower(1);
+
+            if (lightAlpha < 13) {
+                state = 2;
+            }
+        }
+        if (state == 2) {
+
+            int gyroValue = gyro.getHeading();
+            if (gyroValue < 70) {
+                leftMotor.setPower(.5);
+                rightMotor.setPower(-.5);
+            } else {
+                leftMotor.setPower(0);
+                rightMotor.setPower(0);
+                state = 3;
+            }
+        }
+        if (state == 3) {
+
+            telemetry.addData("Status", "Running: " + runtime.toString());
+            if (lightAlpha > 13) {
+                leftMotor.setPower(.05);
+                rightMotor.setPower(1);
+            } else {
+                leftMotor.setPower(1);
+                rightMotor.setPower(.05);
+            }
         }
 
-        /*int gyroValue = gyro.getHeading();
-        if (gyroValue < 90) {
-            leftMotor.setPower(.5);
-            rightMotor.setPower(-.5);
-        }
-        else{
-            leftMotor.setPower(0);
-            rightMotor.setPower(0);
-        }*/
+
+//        telemetry.addData("Status", "Running: " + runtime.toString());
+//
+//       int lightAlpha = ColorSensor.alpha();
+//       telemetry.addData("ColorSensor Alpha: ", lightAlpha);
+//
+//        if (lightAlpha > 15) {
+//            leftMotor.setPower(1);
+//            rightMotor.setPower(.05);
+//        } else {
+//            leftMotor.setPower(.05);
+//            rightMotor.setPower(1);
+//       }
+
+//        int gyroValue = gyro.getHeading();
+//        if (gyroValue < 80) {
+//            leftMotor.setPower(.5);
+//            rightMotor.setPower(-.5);
+//        } else {
+//            leftMotor.setPower(0);
+//            rightMotor.setPower(0);
+    }
     /*
      * Code to run ONCE after the driver hits STOP
      */
 
 
+}
 
 
 
-        }
-    }
+
