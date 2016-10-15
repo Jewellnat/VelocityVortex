@@ -36,6 +36,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -52,15 +56,18 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto Red", group="")  // @Autonomous(...) is the other common choice
+@Autonomous(name="Red Corner", group="")  // @Autonomous(...) is the other common choice
 
-public class auto_red extends OpMode
-{
+public class Auto_Red_Corner extends OpMode {
     /* Declare OpMode members. */
-    private ElapsedTime runtime = new ElapsedTime();
 
-    // private DcMotor leftMotor = null;
-    // private DcMotor rightMotor = null;
+    private ElapsedTime runtime = new ElapsedTime();
+    private int stage;
+    private DcMotor leftMotor = null;
+    private DcMotor rightMotor = null;
+    private com.qualcomm.robotcore.hardware.ColorSensor ColorSensor = null;
+    private GyroSensor gyro = null;
+    private MRI_RangeFinder far = null;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -68,13 +75,18 @@ public class auto_red extends OpMode
     @Override
     public void init() {
         telemetry.addData("Status", "Initialized");
-
+        stage = Settings.stageRedCorner1Forward;
         /* eg: Initialize the hardware variables. Note that the strings used here as parameters
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        // leftMotor  = hardwareMap.dcMotor.get("left motor");
-        // rightMotor = hardwareMap.dcMotor.get("right motor");
+        leftMotor = hardwareMap.dcMotor.get("leftMotor");
+        rightMotor = hardwareMap.dcMotor.get("rightMotor");
+        rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        ColorSensor = hardwareMap.colorSensor.get("colorSensor");
+        gyro = hardwareMap.gyroSensor.get("gyroSensor");
+        far = new MRI_RangeFinder(hardwareMap.i2cDevice.get("far"));
+        gyro.calibrate();
 
         // eg: Set the drive motor directions:
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -104,17 +116,25 @@ public class auto_red extends OpMode
     @Override
     public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
+        int lightAlpha = ColorSensor.alpha();
 
-        // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
-        // leftMotor.setPower(-gamepad1.left_stick_y);
-        // rightMotor.setPower(-gamepad1.right_stick_y);
-    }
+        if (stage == Settings.stageRedCorner1Forward) {
+            leftMotor.setPower(Settings.normalDriveSpeed);
+            rightMotor.setPower(Settings.normalDriveSpeed);
+            if (lightAlpha > Settings.redTapeLightVal) {
+                leftMotor.setPower(0);
+                rightMotor.setPower(0);
+                stage = Settings.stageRedCorner2TurnLeft;
+            }
+
+        }
 
     /*
      * Code to run ONCE after the driver hits STOP
      */
-    @Override
-    public void stop() {
-    }
+        @Override
+        public void stop () {
+        }
 
+    }
 }

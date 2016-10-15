@@ -52,9 +52,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto Blue", group="")  // @Autonomous(...) is the other common choice
+@Autonomous(name="Red Ramp", group="")  // @Autonomous(...) is the other common choice
 
-public class auto_blue extends OpMode
+public class Auto_Red_Ramp extends OpMode
 {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
