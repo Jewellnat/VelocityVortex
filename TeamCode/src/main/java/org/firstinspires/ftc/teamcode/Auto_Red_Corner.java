@@ -115,7 +115,12 @@ public class Auto_Red_Corner extends OpMode {
      */
     @Override
     public void loop() {
+        double leftCM = Settings.Tics2CM(leftMotor.getCurrentPosition());
+        double rightCM = Settings.Tics2CM(rightMotor.getCurrentPosition());
+        double averageCM = (leftCM + rightCM)/ 2;
         telemetry.addData("Status", "Running: " + runtime.toString());
+        telemetry.addData("Status", "distance Average; " + averageCM);
+
         int lightAlpha = ColorSensor.alpha();
 
         if (stage == Settings.stageRedCorner1Forward) {
@@ -125,10 +130,12 @@ public class Auto_Red_Corner extends OpMode {
                 leftMotor.setPower(0);
                 rightMotor.setPower(0);
                 stage = Settings.stageRedCorner2TurnLeft;
+
+
             }
 
         }
-
+    }
     /*
      * Code to run ONCE after the driver hits STOP
      */
@@ -137,4 +144,3 @@ public class Auto_Red_Corner extends OpMode {
         }
 
     }
-}
