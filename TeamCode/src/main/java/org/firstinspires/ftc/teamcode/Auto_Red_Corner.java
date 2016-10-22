@@ -33,10 +33,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.GyroSensor;
@@ -48,15 +45,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * The names of OpModes appear on the menu of the FTC Driver Station.
  * When an selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
- *
+ * <p>
  * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
  * It includes all the skeletal structure that all iterative OpModes contain.
- *
+ * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Red Corner", group="")  // @Autonomous(...) is the other common choice
+@Autonomous(name = "Red Corner", group = "")  // @Autonomous(...) is the other common choice
 
 public class Auto_Red_Corner extends OpMode {
     /* Declare OpMode members. */
@@ -117,11 +114,14 @@ public class Auto_Red_Corner extends OpMode {
     public void loop() {
         double leftCM = Settings.Tics2CM(leftMotor.getCurrentPosition());
         double rightCM = Settings.Tics2CM(rightMotor.getCurrentPosition());
-        double averageCM = (leftCM + rightCM)/ 2;
+        double averageCM = (leftCM + rightCM) / 2;
         telemetry.addData("Status", "Running: " + runtime.toString());
         telemetry.addData("Status", "distance Average; " + averageCM);
 
+        double stageThreeStartPos = 0;
+        int heading = gyro.getHeading();
         int lightAlpha = ColorSensor.alpha();
+        int distance = far.getDistanceCM();
 
         if (stage == Settings.stageRedCorner1Forward) {
             leftMotor.setPower(Settings.normalDriveSpeed);
@@ -130,17 +130,57 @@ public class Auto_Red_Corner extends OpMode {
                 leftMotor.setPower(0);
                 rightMotor.setPower(0);
                 stage = Settings.stageRedCorner2TurnLeft;
+            }
+        }
 
-
+        if (stage == Settings.stageRedCorner2TurnLeft) {
+            leftMotor.setPower(-1);
+            rightMotor.setPower(1);
+             if (heading > Settings.RedTapeAngle){
+                 rightMotor.setPower(0);
+                 leftMotor.setPower(0);
+                 stageThreeStartPos = averageCM;
+                 stage =Settings.stageRedCorner3LineFollow;
+             }
+        }
+        if (stage == Settings.stageRedCorner3LineFollow){
+           if (lightAlpha > Settings.redTapeLightVal) {
+               leftMotor.setPower(.05);
+                rightMotor.setPower(1);
+            } else {
+                leftMotor.setPower(1);
+                rightMotor.setPower(.05);
+            }
+            if ((averageCM - stageThreeStartPos)< Settings.redTapeDistance){
+               leftMotor.setPower(0);
+               rightMotor.setPower(0);
+                stage = Settings.stageRedCorner4AlignBucket;
             }
 
+//            if (distance<Settings.redTapeDistance){
+//                leftMotor.setPower(0);
+//                rightMotor.setPower(0);
+//            }
+
+
         }
+        if (stage == Settings.stageRedCorner4AlignBucket){
+            leftMotor.setPower(-.5);
+            rightMotor.setPower(.5);
+            if (heading > Settings.bucketAngle){
+                rightMotor.setPower(0);
+                leftMotor.setPower(0);
+                stage = 5;
+            }
+        }
+
     }
+
     /*
      * Code to run ONCE after the driver hits STOP
      */
-        @Override
-        public void stop () {
-        }
-
+    @Override
+    public void stop() {
     }
+
+}
