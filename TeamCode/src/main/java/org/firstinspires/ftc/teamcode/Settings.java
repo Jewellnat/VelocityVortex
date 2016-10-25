@@ -10,6 +10,8 @@ public class Settings {
     public static int stageRedCorner3LineFollow = 3;
     public static int stageRedCorner4AlignBucket =4;
     public static int bucketAngle=300;
+    public static int stagecorner1shoot = 1;
+    public static int stageDriveForwardcorner2 = 2;
     public static double normalDriveSpeed = 0.75;
     public static int redTapeLightVal = 99;
     public static double GearRatio = 3 / 1; //motor revoulutions /wheel revoulutions
