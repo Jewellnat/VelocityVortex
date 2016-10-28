@@ -128,6 +128,7 @@ public class Corner extends OpMode
                leftShootMotor.setPower (0);
                rightShootMotor.setPower (0);
                stage = Settings.stageDriveForwardcorner2;
+
      //      if (stage == Settings.stageDriveForwardcorner2)
      //         leftDriveMotor.setPower(Settings.normalDriveSpeed);
      //          rightDriveMotor.setPower(Settings.normalDriveSpeed);
