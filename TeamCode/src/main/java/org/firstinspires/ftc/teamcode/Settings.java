@@ -27,6 +27,7 @@ public class Settings {
     public static int turnOffShooter = 6;
     public static int launch = 69;
     public static int reset = 33;
+    public static double shooterSpeedTeleOP = 1;
     public static double spinnerShooterAuto = .7;
     public static double Tics2CM (int tics){
         return tics / TicsPerCM;

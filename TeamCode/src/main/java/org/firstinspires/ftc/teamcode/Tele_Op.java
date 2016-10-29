@@ -64,8 +64,9 @@ public class Tele_Op extends OpMode
     private DcMotor rightShootMotor;
     private DcMotor rightDriveMotor;
     private DcMotor leftDriveMotor;
+    private DcMotor sweeperMotor;
     private Servo shootTrigger;
-
+    private boolean rightTriggerPressed;
     // private DcMotor leftMotor = null;
     // private DcMotor rightMotor = null;
 
@@ -80,11 +81,15 @@ public class Tele_Op extends OpMode
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        leftDriveMotor  = hardwareMap.dcMotor.get("left_drive");
-        rightDriveMotor = hardwareMap.dcMotor.get("right_drive");
-        leftShootMotor  = hardwareMap.dcMotor.get("left_shoot");
-        rightShootMotor = hardwareMap.dcMotor.get("right_shoot");
+       leftDriveMotor  = hardwareMap.dcMotor.get("leftDriveMotor");
+        rightDriveMotor = hardwareMap.dcMotor.get("rightDriveMotor");
+        leftShootMotor  = hardwareMap.dcMotor.get("leftDriveMotor");
+        rightShootMotor = hardwareMap.dcMotor.get("rightDriveMotor");
+        sweeperMotor = hardwareMap.dcMotor.get("sweeperMotor");
+        leftShootMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         shootTrigger = hardwareMap.servo.get("trigger");
+        rightTriggerPressed = false;
         // eg: Set the drive motor directions:
         // Reverse the motor that runs backwards when connected directly to the battery
         // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
@@ -115,11 +120,25 @@ public class Tele_Op extends OpMode
         telemetry.addData("Status", "Running: " + runtime.toString());
      leftDriveMotor.setPower(-gamepad1.left_stick_y);
         rightDriveMotor.setPower(-gamepad1.right_stick_y);
+        if (gamepad2.right_trigger == 1 && rightTriggerPressed == false) {
+            rightTriggerPressed = true;
 
-
-        // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
-        // leftMotor.setPower(-gamepad1.left_stick_y);
-        // rightMotor.setPower(-gamepad1.right_stick_y);
+        }  else if(gamepad2.right_trigger ==1 && rightTriggerPressed == true) {
+            rightTriggerPressed = false;
+        }
+        if (rightTriggerPressed) {
+            leftShootMotor.setPower(Settings.shooterSpeedTeleOP);
+            rightShootMotor.setPower(Settings.shooterSpeedTeleOP);
+        } else {
+            leftShootMotor.setPower(0);
+            rightShootMotor.setPower(0);
+        }
+        if (gamepad2.right_bumper){
+            shootTrigger.setPosition(Settings.launch);
+        }else {
+            shootTrigger.setPosition(Settings.reset);
+        }
+        leftDriveMotor.setPower(-gamepad2.left_stick_y);
     }
 
     /*

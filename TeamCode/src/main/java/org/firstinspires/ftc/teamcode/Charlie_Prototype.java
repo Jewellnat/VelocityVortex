@@ -149,6 +149,21 @@ public class Charlie_Prototype extends OpMode {
             } else {
                 leftMotor.setPower(0);
                 rightMotor.setPower(0);
+            }
+        }
+            if (lightAlpha < 50) {
+                if (distance > 5) {
+
+                    leftMotor.setPower(1);
+                    rightMotor.setPower(1);
+                }else{
+                  leftMotor.setPower(0);
+                  rightMotor.setPower(0);
+                }
+            }
+            if (lightAlpha > 50) {
+
+                }
 //            if (lightAlpha > 13) {
 //                leftMotor.setPower(.05);
 //                rightMotor.setPower(1);

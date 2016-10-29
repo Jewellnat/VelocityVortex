@@ -72,11 +72,11 @@ public class Corner extends OpMode
     public void init() {
         telemetry.addData("Status", "Initialized");
         stage = Settings.stagecorner1shoot;
-        leftShootMotor = hardwareMap.dcMotor.get("left_shoot");
-        rightShootMotor = hardwareMap.dcMotor.get("right_shoot");
-        leftDriveMotor = hardwareMap.dcMotor.get("left_drive");
-        rightDriveMotor = hardwareMap.dcMotor.get("right_drive");
-        rightShootMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
+        rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
+        leftDriveMotor = hardwareMap.dcMotor.get("leftDriveMotor");
+        rightDriveMotor = hardwareMap.dcMotor.get("rightDriveMotor");
+        leftShootMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         shootTrigger = hardwareMap.servo.get("trigger");
 
 
