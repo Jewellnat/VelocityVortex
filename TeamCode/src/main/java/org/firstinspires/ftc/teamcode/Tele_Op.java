@@ -84,7 +84,7 @@ public class Tele_Op extends OpMode
         rightDriveMotor = hardwareMap.dcMotor.get("right_drive");
         leftShootMotor  = hardwareMap.dcMotor.get("left_shoot");
         rightShootMotor = hardwareMap.dcMotor.get("right_shoot");
-
+        shootTrigger = hardwareMap.servo.get("trigger");
         // eg: Set the drive motor directions:
         // Reverse the motor that runs backwards when connected directly to the battery
         // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors

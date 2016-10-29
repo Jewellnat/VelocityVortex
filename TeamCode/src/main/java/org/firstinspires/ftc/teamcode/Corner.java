@@ -72,7 +72,14 @@ public class Corner extends OpMode
     public void init() {
         telemetry.addData("Status", "Initialized");
         stage = Settings.stagecorner1shoot;
+        leftShootMotor = hardwareMap.dcMotor.get("left_shoot");
+        rightShootMotor = hardwareMap.dcMotor.get("right_shoot");
+        leftDriveMotor = hardwareMap.dcMotor.get("left_drive");
+        rightDriveMotor = hardwareMap.dcMotor.get("right_drive");
         rightShootMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        shootTrigger = hardwareMap.servo.get("trigger");
+
+
         /* eg: Initialize the hardware variables. Note that the strings used here as parameters
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
