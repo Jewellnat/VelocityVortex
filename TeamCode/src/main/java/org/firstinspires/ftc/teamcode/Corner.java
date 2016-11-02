@@ -55,8 +55,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @Autonomous(name="Corner", group="")  // @Autonomous(...) is the other common choice
 @Disabled
-public class Corner extends OpMode
-{
+public class Corner extends OpMode {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftShootMotor;
@@ -65,6 +64,7 @@ public class Corner extends OpMode
     private DcMotor leftDriveMotor;
     private Servo shootTrigger;
     private int stage;
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -101,8 +101,6 @@ public class Corner extends OpMode
     public void init_loop() {
 
 
-
-
     }
 
     /*
@@ -119,42 +117,58 @@ public class Corner extends OpMode
     @Override
     public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
-        stage = Settings.stagecorner1shoot;
-       if (stage == Settings.stagecorner1shoot){
-        leftShootMotor.setPower(Settings.spinnerShooterAuto);
-        rightShootMotor.setPower(Settings.spinnerShooterAuto);
-           if (runtime.seconds()>Settings.firstLaunch && runtime.seconds()<Settings.firstReset){
-           shootTrigger.setPosition(Settings.launch);}
-           if (runtime.seconds()>Settings.firstReset && runtime.seconds()<Settings.secondLaunch){
-           shootTrigger.setPosition(Settings.reset);}
-           if (runtime.seconds()>Settings.secondLaunch && runtime.seconds()<Settings.secondReset){
-            shootTrigger.setPosition(Settings.launch);}
-           if (runtime.seconds()>Settings.secondReset && runtime.seconds()<Settings.turnOffShooter){
-            shootTrigger.setPosition(Settings.reset);}
-           if (runtime.seconds()>Settings.turnOffShooter) {
-               leftShootMotor.setPower (0);
-               rightShootMotor.setPower (0);
-               stage = Settings.stageDriveForwardcorner2;
-
-     //      if (stage == Settings.stageDriveForwardcorner2)
-     //         leftDriveMotor.setPower(Settings.normalDriveSpeed);
-     //          rightDriveMotor.setPower(Settings.normalDriveSpeed);
 
 
-           }
-           }
+        if (stage == Settings.stagecorner1shoot) {
+            leftShootMotor.setPower(Settings.spinnerShooterAuto);
+            rightShootMotor.setPower(Settings.spinnerShooterAuto);
+            if (runtime.seconds() > Settings.firstLaunch && runtime.seconds() < Settings.firstReset) {
+                shootTrigger.setPosition(Settings.launch);
+            }
+            if (runtime.seconds() > Settings.firstReset && runtime.seconds() < Settings.secondLaunch) {
+                shootTrigger.setPosition(Settings.reset);
+            }
+            if (runtime.seconds() > Settings.secondLaunch && runtime.seconds() < Settings.secondReset) {
+                shootTrigger.setPosition(Settings.launch);
+            }
+            if (runtime.seconds() > Settings.secondReset && runtime.seconds() < Settings.turnOffShooter) {
+                shootTrigger.setPosition(Settings.reset);
+            }
+            if (runtime.seconds() > Settings.turnOffShooter) {
+                leftShootMotor.setPower(0);
+                rightShootMotor.setPower(0);
+                stage = Settings.stageDriveForwardcorner2;
+                leftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                rightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                leftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                rightDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);            }
 
+        }
 
-        // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
-        // leftMotor.setPower(-gamepad1.left_stick_y);
-        // rightMotor.setPower(-gamepad1.right_stick_y);
+        if (stage == Settings.stageDriveForwardcorner2) {
+//
+            leftDriveMotor.setPower(Settings.normalDriveSpeed);
+            rightDriveMotor.setPower(Settings.normalDriveSpeed);
+
+            double leftcm = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
+            double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
+            double averagecm = (leftcm + rightcm) / 2;
+            if (averagecm > Settings.cornerDriveDistance) {
+                stage = Settings.stageStoppingcorner3;
+
+            }
+        }
+        if (stage == Settings.stageStoppingcorner3) {
+            leftDriveMotor.setPower(0);
+            rightDriveMotor.setPower(0);
+
+        }
     }
-
     /*
      * Code to run ONCE after the driver hits STOP
      */
-    @Override
-    public void stop() {
-    }
+        @Override
+        public void stop () {
+        }
 
-}
+    }

@@ -12,7 +12,13 @@ public class Settings {
     public static int bucketAngle=300;
     public static int stagecorner1shoot = 1;
     public static int stageDriveForwardcorner2 = 2;
+    public static int stageStoppingcorner3 = 3;
+    public static int stagemiddle1shoot = 1;
+    public static int stageDriveForwardmiddle2 = 2;
+    public static int stageStoppingmiddle3 = 3;
     public static double normalDriveSpeed = 0.75;
+    public static int cornerDriveDistance = 145;
+    public static int middleDriveDistance = 135;
     public static int redTapeLightVal = 99;
     public static double GearRatio = 3 / 1; //motor revoulutions /wheel revoulutions
     public final static int ticsPerRevoulution = 1440;
@@ -29,6 +35,7 @@ public class Settings {
     public static int reset = 33;
     public static double shooterSpeedTeleOP = 1;
     public static double spinnerShooterAuto = .7;
+    public static double bestShooterSpeed = 66;
     public static double Tics2CM (int tics){
         return tics / TicsPerCM;
 
