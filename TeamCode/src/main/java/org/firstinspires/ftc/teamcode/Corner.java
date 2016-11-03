@@ -39,6 +39,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
@@ -63,6 +65,8 @@ public class Corner extends OpMode {
     private DcMotor rightDriveMotor;
     private DcMotor leftDriveMotor;
     private Servo shootTrigger;
+    private ColorSensor colorSensor;
+    private GyroSensor gyroSensor;
     private int stage;
 
     /*
@@ -78,6 +82,8 @@ public class Corner extends OpMode {
         rightDriveMotor = hardwareMap.dcMotor.get("rightDriveMotor");
         leftShootMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         shootTrigger = hardwareMap.servo.get("trigger");
+        gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
+        colorSensor = hardwareMap.colorSensor.get("colorSensor");
 
 
         /* eg: Initialize the hardware variables. Note that the strings used here as parameters

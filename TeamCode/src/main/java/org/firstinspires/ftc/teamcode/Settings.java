@@ -31,11 +31,13 @@ public class Settings {
     public static int secondLaunch = 4;
     public static int secondReset = 5;
     public static int turnOffShooter = 6;
-    public static int launch = 69;
-    public static int reset = 33;
-    public static double shooterSpeedTeleOP = 1;
-    public static double spinnerShooterAuto = .7;
+    public static double launch = 0;
+    public static double reset = .5;
+    public static double shooterSpeedTeleOP = -1;
+    public static double spinnerShooterAuto = -.7;
     public static double bestShooterSpeed = 66;
+    public static int beaconRight = 1;
+    public static int beaconLeft = 0;
     public static double Tics2CM (int tics){
         return tics / TicsPerCM;
 

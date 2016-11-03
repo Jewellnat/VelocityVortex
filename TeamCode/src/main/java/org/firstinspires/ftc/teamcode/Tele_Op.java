@@ -40,6 +40,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
@@ -60,16 +62,17 @@ public class Tele_Op extends OpMode
 {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftShootMotor;
-    private DcMotor rightShootMotor;
-    private DcMotor rightDriveMotor;
-    private DcMotor leftDriveMotor;
-    private DcMotor sweeperMotor;
+    private DcMotor leftShootMotor = null;
+    private DcMotor rightShootMotor = null;
+    private DcMotor rightDriveMotor = null;
+    private DcMotor leftDriveMotor = null;
+    private DcMotor sweeperMotor = null;
     private Servo shootTrigger;
+    private Servo beaconServo;
     private boolean rightTriggerPressed;
-    // private DcMotor leftMotor = null;
-    // private DcMotor rightMotor = null;
-
+    private boolean rightBummperPressed;
+    private ColorSensor colorSensor;
+    private GyroSensor gyroSensor;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -83,13 +86,17 @@ public class Tele_Op extends OpMode
          */
        leftDriveMotor  = hardwareMap.dcMotor.get("leftDriveMotor");
         rightDriveMotor = hardwareMap.dcMotor.get("rightDriveMotor");
-        leftShootMotor  = hardwareMap.dcMotor.get("leftDriveMotor");
-        rightShootMotor = hardwareMap.dcMotor.get("rightDriveMotor");
+        leftDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftShootMotor  = hardwareMap.dcMotor.get("leftShootMotor");
+        rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
         sweeperMotor = hardwareMap.dcMotor.get("sweeperMotor");
         leftShootMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        beaconServo = hardwareMap.servo.get("bacon");
         shootTrigger = hardwareMap.servo.get("trigger");
+        gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
+        colorSensor = hardwareMap.colorSensor.get("colorSensor");
         rightTriggerPressed = false;
+
         // eg: Set the drive motor directions:
         // Reverse the motor that runs backwards when connected directly to the battery
         // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
@@ -133,12 +140,21 @@ public class Tele_Op extends OpMode
             leftShootMotor.setPower(0);
             rightShootMotor.setPower(0);
         }
-        if (gamepad2.right_bumper){
-            shootTrigger.setPosition(Settings.launch);
-        }else {
-            shootTrigger.setPosition(Settings.reset);
+        if (gamepad2.right_bumper == 1 && rightBummperPressed == false) {
+            rightBummperPressed = true;
+
+        }  else if(gamepad2.right_bumper ==1 && rightBummperPressed == true) {
+            rightBummperPressed = false;
         }
-        leftDriveMotor.setPower(-gamepad2.left_stick_y);
+        if (gamepad2.right_bumper){
+            beaconServo.setPosition(Settings.beaconRight);
+        }else {
+
+            beaconServo.setPosition(Settings.beaconLeft);
+        }
+
+            leftDriveMotor.setPower(-gamepad2.left_stick_y);
+
     }
 
     /*

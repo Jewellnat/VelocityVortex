@@ -8,8 +8,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 
 @Autonomous(name="Midddle", group="")  // @Autonomous(...) is the other common choice
 
@@ -22,6 +25,9 @@ public class Middle extends OpMode
     private DcMotor leftDriveMotor = null;
     private DcMotor rightDriveMotor = null;
     private Servo shootTrigger = null;
+    private Servo beaconServo = null;
+    private ColorSensor colorSensor;
+    private GyroSensor gyroSensor;
 
 
     int Stage;
@@ -41,6 +47,13 @@ public class Middle extends OpMode
         leftDriveMotor = hardwareMap.dcMotor.get("leftDriveMotor");
         rightDriveMotor = hardwareMap.dcMotor.get("rightDriveMotor");
         leftDriveMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftShootMotor  = hardwareMap.dcMotor.get("leftShootMotor");
+        rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
+        leftShootMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        beaconServo = hardwareMap.servo.get("bacon");
+        shootTrigger = hardwareMap.servo.get("trigger");
+        gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
+        colorSensor = hardwareMap.colorSensor.get("colorSensor");
     }
 
     /*
