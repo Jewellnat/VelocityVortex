@@ -71,6 +71,7 @@ public class Tele_Op extends OpMode {
     private Servo beaconServo;
     private boolean rightTriggerPressed;
     private boolean leftBummperPressed;
+//    private boolean leftBummperPrevPressed;
     private ColorSensor colorSensor;
     private GyroSensor gyroSensor;
 
@@ -142,12 +143,12 @@ public class Tele_Op extends OpMode {
             leftShootMotor.setPower(0);
             rightShootMotor.setPower(0);
         }
-        if (gamepad2.left_bumper  && leftBummperPressed == false) {
+        if (gamepad2.left_bumper && leftBummperPressed == false) {
             leftBummperPressed = true;
-
-        } else if (gamepad2.left_bumper && leftBummperPressed == true) {
+        } else if (!gamepad2.left_bumper && leftBummperPressed == true) {
             leftBummperPressed = false;
         }
+
         if (leftBummperPressed) {
             beaconServo.setPosition(Settings.beaconRight);
         } else {
@@ -156,9 +157,9 @@ public class Tele_Op extends OpMode {
         }
 
         sweeperMotor.setPower(-gamepad2.left_stick_y);
-        if (gamepad2.right_bumper){
+        if (gamepad2.right_bumper) {
             shootTrigger.setPosition(Settings.reset);
-        }else {
+        } else {
             shootTrigger.setPosition(Settings.launch);
 
         }

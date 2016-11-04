@@ -31,9 +31,9 @@ public class Settings {
     public static int secondLaunch = 4;
     public static int secondReset = 5;
     public static int turnOffShooter = 6;
-    public static double launch = .6;
-    public static double reset = 0;
-    public static double shooterSpeedTeleOP = -1;
+    public static double launch = 0;
+    public static double reset = .6;
+    public static double shooterSpeedTeleOP = -.9;
     public static double spinnerShooterAuto = -.7;
     public static double bestShooterSpeed = 120 * Math.PI;
     public static int beaconRight = 1;
