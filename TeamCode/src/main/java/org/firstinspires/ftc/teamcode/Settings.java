@@ -20,7 +20,7 @@ public class Settings {
     public static int cornerDriveDistance = 145;
     public static int middleDriveDistance = 135;
     public static int redTapeLightVal = 99;
-    public static double GearRatio = 3 / 1; //motor revoulutions /wheel revoulutions
+    public static double GearRatio = 2 / 1; //motor revoulutions /wheel revoulutions
     public final static int ticsPerRevoulution = 1440;
     public final static double wheelCircumfence = 10*Math.PI; //wheel diameter * PI
     public static double TicsPerCM = (GearRatio *ticsPerRevoulution)/wheelCircumfence;
@@ -31,11 +31,11 @@ public class Settings {
     public static int secondLaunch = 4;
     public static int secondReset = 5;
     public static int turnOffShooter = 6;
-    public static double launch = 0;
-    public static double reset = .5;
+    public static double launch = .6;
+    public static double reset = 0;
     public static double shooterSpeedTeleOP = -1;
     public static double spinnerShooterAuto = -.7;
-    public static double bestShooterSpeed = 66;
+    public static double bestShooterSpeed = 120 * Math.PI;
     public static int beaconRight = 1;
     public static int beaconLeft = 0;
     public static double Tics2CM (int tics){

@@ -42,24 +42,24 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
+
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
  * The names of OpModes appear on the menu of the FTC Driver Station.
  * When an selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
- *
+ * <p>
  * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
  * It includes all the skeletal structure that all iterative OpModes contain.
- *
+ * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="The teleop", group="")  // @Autonomous(...) is the other common choice
+@TeleOp(name = "The teleop", group = "")  // @Autonomous(...) is the other common choice
 
-public class Tele_Op extends OpMode
-{
+public class Tele_Op extends OpMode {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftShootMotor = null;
@@ -70,9 +70,10 @@ public class Tele_Op extends OpMode
     private Servo shootTrigger;
     private Servo beaconServo;
     private boolean rightTriggerPressed;
-    private boolean rightBummperPressed;
+    private boolean leftBummperPressed;
     private ColorSensor colorSensor;
     private GyroSensor gyroSensor;
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -84,10 +85,10 @@ public class Tele_Op extends OpMode
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-       leftDriveMotor  = hardwareMap.dcMotor.get("leftDriveMotor");
+        leftDriveMotor = hardwareMap.dcMotor.get("leftDriveMotor");
         rightDriveMotor = hardwareMap.dcMotor.get("rightDriveMotor");
         leftDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftShootMotor  = hardwareMap.dcMotor.get("leftShootMotor");
+        leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
         rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
         sweeperMotor = hardwareMap.dcMotor.get("sweeperMotor");
         leftShootMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -124,13 +125,14 @@ public class Tele_Op extends OpMode
      */
     @Override
     public void loop() {
+        telemetry.addData("Status", shootTrigger.getPosition());
         telemetry.addData("Status", "Running: " + runtime.toString());
-     leftDriveMotor.setPower(-gamepad1.left_stick_y);
+        leftDriveMotor.setPower(-gamepad1.left_stick_y);
         rightDriveMotor.setPower(-gamepad1.right_stick_y);
         if (gamepad2.right_trigger == 1 && rightTriggerPressed == false) {
             rightTriggerPressed = true;
 
-        }  else if(gamepad2.right_trigger ==1 && rightTriggerPressed == true) {
+        } else if (gamepad2.right_trigger == 1 && rightTriggerPressed == true) {
             rightTriggerPressed = false;
         }
         if (rightTriggerPressed) {
@@ -140,20 +142,26 @@ public class Tele_Op extends OpMode
             leftShootMotor.setPower(0);
             rightShootMotor.setPower(0);
         }
-        if (gamepad2.right_bumper == 1 && rightBummperPressed == false) {
-            rightBummperPressed = true;
+        if (gamepad2.left_bumper  && leftBummperPressed == false) {
+            leftBummperPressed = true;
 
-        }  else if(gamepad2.right_bumper ==1 && rightBummperPressed == true) {
-            rightBummperPressed = false;
+        } else if (gamepad2.left_bumper && leftBummperPressed == true) {
+            leftBummperPressed = false;
         }
-        if (gamepad2.right_bumper){
+        if (leftBummperPressed) {
             beaconServo.setPosition(Settings.beaconRight);
-        }else {
+        } else {
 
             beaconServo.setPosition(Settings.beaconLeft);
         }
 
-            leftDriveMotor.setPower(-gamepad2.left_stick_y);
+        sweeperMotor.setPower(-gamepad2.left_stick_y);
+        if (gamepad2.right_bumper){
+            shootTrigger.setPosition(Settings.reset);
+        }else {
+            shootTrigger.setPosition(Settings.launch);
+
+        }
 
     }
 
