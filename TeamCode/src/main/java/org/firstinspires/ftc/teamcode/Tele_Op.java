@@ -32,13 +32,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
@@ -70,8 +68,8 @@ public class Tele_Op extends OpMode {
     private Servo shootTrigger;
     private Servo beaconServo;
     private boolean rightTriggerPressed;
-    private boolean leftBummperPressed;
-//    private boolean leftBummperPrevPressed;
+    private boolean BeaconServoLeft;
+    private boolean leftBummperPrevPressed;
     private ColorSensor colorSensor;
     private GyroSensor gyroSensor;
 
@@ -91,6 +89,8 @@ public class Tele_Op extends OpMode {
         leftDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
         rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
+        leftShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rightShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         sweeperMotor = hardwareMap.dcMotor.get("sweeperMotor");
         leftShootMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         beaconServo = hardwareMap.servo.get("bacon");
@@ -143,13 +143,14 @@ public class Tele_Op extends OpMode {
             leftShootMotor.setPower(0);
             rightShootMotor.setPower(0);
         }
-        if (gamepad2.left_bumper && leftBummperPressed == false) {
-            leftBummperPressed = true;
-        } else if (!gamepad2.left_bumper && leftBummperPressed == true) {
-            leftBummperPressed = false;
+        if (gamepad2.left_bumper && leftBummperPrevPressed == false) {
+            leftBummperPrevPressed = true;
+            BeaconServoLeft = !BeaconServoLeft;
+        } else if (!gamepad2.left_bumper && leftBummperPrevPressed == true) {
+            leftBummperPrevPressed = false;
         }
 
-        if (leftBummperPressed) {
+        if (BeaconServoLeft) {
             beaconServo.setPosition(Settings.beaconRight);
         } else {
 
