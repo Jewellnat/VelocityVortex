@@ -89,8 +89,7 @@ public class Middle extends OpMode {
         leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
         rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
         shootTrigger = hardwareMap.servo.get("trigger");
-        leftShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
         //gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
         sweeperMotor = hardwareMap.dcMotor.get("sweeperMotor");
         //colorSensor = hardwareMap.colorSensor.get("colorSensor");
