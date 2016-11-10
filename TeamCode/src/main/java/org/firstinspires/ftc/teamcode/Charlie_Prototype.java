@@ -59,7 +59,8 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name = "Prototype", group = "")  // @Autonomous(...) is the other common choice
+ //@Autonomous(name = "Prototype", group = "")  // @Autonomous(...) is the other common choice
+    @Disabled
 public class Charlie_Prototype extends OpMode {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();

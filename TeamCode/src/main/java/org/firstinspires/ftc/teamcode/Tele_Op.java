@@ -119,6 +119,7 @@ public class Tele_Op extends OpMode {
     @Override
     public void start() {
         runtime.reset();
+        shootTrigger.setPosition(Settings.reset);
     }
 
     /*
@@ -159,9 +160,9 @@ public class Tele_Op extends OpMode {
 
         sweeperMotor.setPower(-gamepad2.left_stick_y);
         if (gamepad2.right_bumper) {
-            shootTrigger.setPosition(Settings.reset);
-        } else {
             shootTrigger.setPosition(Settings.launch);
+        } else {
+            shootTrigger.setPosition(Settings.reset);
 
         }
 

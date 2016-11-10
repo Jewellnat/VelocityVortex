@@ -17,27 +17,34 @@ public class Settings {
     public static int stageDriveForwardmiddle2 = 2;
     public static int stageStoppingmiddle3 = 3;
     public static double normalDriveSpeed = 0.75;
-    public static int cornerDriveDistance = 145;
-    public static int middleDriveDistance = 135;
+    public static int cornerDriveDistance = 155;
+    public static int middleDriveDistance = 140;
     public static int redTapeLightVal = 99;
     public static double GearRatio = 2 / 1; //motor revoulutions /wheel revoulutions
     public final static int ticsPerRevoulution = 1440;
-    public final static double wheelCircumfence = 10*Math.PI; //wheel diameter * PI
+    public final static double wheelCircumfence = 8*Math.PI; //wheel diameter * PI
     public static double TicsPerCM = (GearRatio *ticsPerRevoulution)/wheelCircumfence;
     public static int RedTapeAngle = 315;
     public static double redTapeDistance= 60;
-    public static int firstLaunch = 2;
-    public static int firstReset = 3;
-    public static int secondLaunch = 4;
-    public static int secondReset = 5;
-    public static int turnOffShooter = 6;
-    public static double launch = 0;
-    public static double reset = .6;
-    public static double shooterSpeedTeleOP = -.9;
-    public static double spinnerShooterAuto = -.7;
+    public static int firstLaunch = 4;
+    public static int firstReset = 5;
+    public static int secondLaunch = 7;
+    public static int secondReset = 8;
+    public static int turnOffShooter = 9;
+    public static double launch = .6;
+    public static double reset = 0;
+    public static double shooterSpeedTeleOP = .25;
+    public static double spinnerShooterAuto = .3;
     public static double bestShooterSpeed = 120 * Math.PI;
     public static int beaconRight = 1;
     public static int beaconLeft = 0;
+    public static int stage1FIRE = 1;
+    public static int stage2Charge = 2;
+    public static int stage3Stop = 3;
+    public static double driveSpeed = 1;
+    public static double spinnerShooterMiddle = .25;
+
+
     public static double Tics2CM (int tics){
         return tics / TicsPerCM;
 

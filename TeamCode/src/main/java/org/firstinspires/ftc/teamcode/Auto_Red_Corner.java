@@ -53,7 +53,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name = "Red Corner", group = "")  // @Autonomous(...) is the other common choice
+ //@Autonomous(name = "Red Corner", group = "")  // @Autonomous(...) is the other common choice
 @Disabled
 public class Auto_Red_Corner extends OpMode {
     /* Declare OpMode members. */

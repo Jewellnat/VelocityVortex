@@ -35,11 +35,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.GyroSensor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Hardware;
-import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 /**
@@ -56,9 +53,9 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name = "Middle", group = "")  // @Autonomous(...) is the other common choice
+@Autonomous(name = "shoot only", group = "")  // @Autonomous(...) is the other common choice
 
-public class Middle extends OpMode {
+public class shoot extends OpMode {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftShootMotor = null;
@@ -89,9 +86,9 @@ public class Middle extends OpMode {
         leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
         rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
         shootTrigger = hardwareMap.servo.get("trigger");
+        //gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
         leftShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rightShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        //gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
         sweeperMotor = hardwareMap.dcMotor.get("sweeperMotor");
         //colorSensor = hardwareMap.colorSensor.get("colorSensor");
         beaconServo = hardwareMap.servo.get("bacon");
@@ -146,31 +143,33 @@ public class Middle extends OpMode {
             if (runtime.seconds() > Settings.turnOffShooter) {
                 leftShootMotor.setPower(0);
                 rightShootMotor.setPower(0);
-                leftDriveMotor.setPower(Settings.driveSpeed);
-                rightDriveMotor.setPower(Settings.driveSpeed);
                 stage = Settings.stage2Charge;
-
             }
-        }
-        if (stage == Settings.stage2Charge) {
-            leftDriveMotor.setPower(Settings.driveSpeed);
-            rightDriveMotor.setPower(Settings.driveSpeed);
-            double leftcm = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
-            double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
-            double averagecm = (leftcm + rightcm) / 2;
-            if (averagecm > Settings.middleDriveDistance) {
-                stage = Settings.stage3Stop;
+//                leftDriveMotor.setPower(Settings.driveSpeed);
+//                rightDriveMotor.setPower(Settings.driveSpeed);
+//                stage = Settings.stage2Charge;
+//
+//            }
+//        }
+//        if (stage == Settings.stage2Charge) {
+//            leftDriveMotor.setPower(Settings.driveSpeed);
+//            rightDriveMotor.setPower(Settings.driveSpeed);
+//            double leftcm = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
+//            double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
+//            double averagecm = (leftcm + rightcm) / 2;
+//            if (averagecm > Settings.middleDriveDistance) {
+//                stage = Settings.stage3Stop;
+//
+//            }
+//        }
+//
+//        if (stage == Settings.stage3Stop) {
+//            leftDriveMotor.setPower(0);
+//            rightDriveMotor.setPower(0);
+//        }
 
-            }
-        }
 
-        if (stage == Settings.stage3Stop) {
-            leftDriveMotor.setPower(0);
-            rightDriveMotor.setPower(0);
         }
-
 
     }
-
-
 }

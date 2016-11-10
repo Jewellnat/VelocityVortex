@@ -33,41 +33,46 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Hardware;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+
+
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
  * The names of OpModes appear on the menu of the FTC Driver Station.
  * When an selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
- *
+ * <p>
  * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
  * It includes all the skeletal structure that all iterative OpModes contain.
- *
+ * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Corner", group="")  // @Autonomous(...) is the other common choice
-@Disabled
+@Autonomous(name = "Corner", group = "")  // @Autonomous(...) is the other common choice
+
 public class Corner extends OpMode {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftShootMotor;
-    private DcMotor rightShootMotor;
-    private DcMotor rightDriveMotor;
-    private DcMotor leftDriveMotor;
-    private Servo shootTrigger;
-    private ColorSensor colorSensor;
-    private GyroSensor gyroSensor;
-    private int stage;
+    private DcMotor leftShootMotor = null;
+    private DcMotor rightShootMotor = null;
+    private DcMotor leftDriveMotor = null;
+    private DcMotor rightDriveMotor = null;
+    private Servo shootTrigger = null;
+   // private GyroSensor gyroSensor;
+    private DcMotor sweeperMotor = null;
+   // private ColorSensor colorSensor;
+    private Servo beaconServo = null;
+
+    int stage;
+
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -75,29 +80,23 @@ public class Corner extends OpMode {
     @Override
     public void init() {
         telemetry.addData("Status", "Initialized");
-        stage = Settings.stagecorner1shoot;
-        leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
-        rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
+
+        //leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
+        //
+        // rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
         leftDriveMotor = hardwareMap.dcMotor.get("leftDriveMotor");
         rightDriveMotor = hardwareMap.dcMotor.get("rightDriveMotor");
-        leftShootMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftDriveMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
+        leftShootMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
+        leftShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rightShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         shootTrigger = hardwareMap.servo.get("trigger");
-        gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
-        colorSensor = hardwareMap.colorSensor.get("colorSensor");
-
-
-        /* eg: Initialize the hardware variables. Note that the strings used here as parameters
-         * to 'get' must correspond to the names assigned during the robot configuration
-         * step (using the FTC Robot Controller app on the phone).
-         */
-        // leftMotor  = hardwareMap.dcMotor.get("left motor");
-        // rightMotor = hardwareMap.dcMotor.get("right motor");
-
-        // eg: Set the drive motor directions:
-        // Reverse the motor that runs backwards when connected directly to the battery
-        // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        //  rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        // telemetry.addData("Status", "Initialized");
+       // gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
+        sweeperMotor = hardwareMap.dcMotor.get("sweeperMotor");
+       // colorSensor = hardwareMap.colorSensor.get("colorSensor");
+        beaconServo = hardwareMap.servo.get("bacon");
     }
 
     /*
@@ -105,8 +104,6 @@ public class Corner extends OpMode {
      */
     @Override
     public void init_loop() {
-
-
     }
 
     /*
@@ -115,15 +112,18 @@ public class Corner extends OpMode {
     @Override
     public void start() {
         runtime.reset();
+        stage = Settings.stagecorner1shoot;
+        shootTrigger.setPosition(Settings.reset);
     }
+
 
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
+
     public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
-
 
         if (stage == Settings.stagecorner1shoot) {
             leftShootMotor.setPower(Settings.spinnerShooterAuto);
@@ -143,38 +143,34 @@ public class Corner extends OpMode {
             if (runtime.seconds() > Settings.turnOffShooter) {
                 leftShootMotor.setPower(0);
                 rightShootMotor.setPower(0);
-                stage = Settings.stageDriveForwardcorner2;
                 leftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 leftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                rightDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);            }
+                rightDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                stage = Settings.stage2Charge;
 
+            }
         }
+        if (stage == Settings.stage2Charge) {
 
-        if (stage == Settings.stageDriveForwardcorner2) {
-//
-            leftDriveMotor.setPower(Settings.normalDriveSpeed);
-            rightDriveMotor.setPower(Settings.normalDriveSpeed);
+            leftDriveMotor.setPower(Settings.driveSpeed);
+            rightDriveMotor.setPower(Settings.driveSpeed);
 
             double leftcm = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
             double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
             double averagecm = (leftcm + rightcm) / 2;
             if (averagecm > Settings.cornerDriveDistance) {
-                stage = Settings.stageStoppingcorner3;
+                stage = Settings.stage3Stop;
 
             }
         }
-        if (stage == Settings.stageStoppingcorner3) {
+        if (stage == Settings.stage3Stop) {
             leftDriveMotor.setPower(0);
             rightDriveMotor.setPower(0);
-
-        }
-    }
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
-        @Override
-        public void stop () {
         }
 
+
     }
+
+
+}
