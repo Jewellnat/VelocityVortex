@@ -5,9 +5,12 @@ package org.firstinspires.ftc.teamcode;
  */
 
 public class SpeedController {
-    double startingMiliseconds;
-    int targetSpeedRPM;
-    int startingTicks;
+
+    private double startingMiliseconds;
+    private int targetSpeedRPM=0;
+    private int startingTicks=0;
+    private double currentRPM = 0;
+
     public SpeedController(int targetSpeedRPM){
         this.targetSpeedRPM = targetSpeedRPM;
     }
@@ -18,7 +21,12 @@ public class SpeedController {
 
     public void Init(double startingMiliseconds, int startingTicks){
         this.startingMiliseconds = startingMiliseconds;
-                this.startingTicks = startingTicks;
+              this.startingTicks = startingTicks;
+    }
+
+    public double getMeasuredRPM(){
+      //return the current Measured RPM
+      return currentRPM;
     }
 
     public double getMotorSpeed(double currentMiliseconds, int currentTIcks){
@@ -27,12 +35,12 @@ public class SpeedController {
         double deltaTime = (currentMiliseconds - startingMiliseconds) / 60000;
         double deltaRevs = (currentTIcks - startingTicks) /Settings.shooterTicksPerRev;
         double retValue = 0;
-        double currRPM = deltaRevs/deltaTime;
+        currentRPM = deltaRevs/deltaTime;
 
-        if (currRPM > targetSpeedRPM) {
+        if (currentRPM > targetSpeedRPM) {
           retValue = 0;
         }
-        if (currRPM <= targetSpeedRPM){
+        if (currentRPM <= targetSpeedRPM){
             retValue = 1;
         }
       return retValue;

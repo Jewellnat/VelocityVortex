@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Hardware;
 
 
-public class Shooter {
+public class Shooter extends opMode{
 
     //Tri state the trigger states...
     public static int triggerPositionReset = 0;
@@ -92,6 +92,7 @@ public class Shooter {
     public void loop(){
       // put this in the loop to make the shooter cycle
 
+      
       if (isTriggerinPosition(Settings.reset, Settings.posTriggerTol)){
         triggerPosition = triggerPositionReset;
       } else if (isTriggerinPosition(Settings.launch, Settings.posTriggerTol)){
