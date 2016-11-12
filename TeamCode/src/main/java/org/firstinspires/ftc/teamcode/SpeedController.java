@@ -8,6 +8,7 @@ public class SpeedController {
     double startingMiliseconds;
     int targetSpeedRPM;
     int startingTicks;
+    int currentRPM = 0;
     public SpeedController(int targetSpeedRPM){
         this.targetSpeedRPM = targetSpeedRPM;
     }
@@ -21,18 +22,22 @@ public class SpeedController {
                 this.startingTicks = startingTicks;
     }
 
-    public double getMotorSpeed(double currentMiliseconds, int currentTIcks){
+    public int getMeasuredRPM(){
+        return currentRPM;
+    }
+
+    public double getMotorPower(double currentMiliseconds, int currentTIcks){
 
         //delta time in minutes therefore need to divide by 60000
         double deltaTime = (currentMiliseconds - startingMiliseconds) / 60000;
         double deltaRevs = (currentTIcks - startingTicks) /Settings.shooterTicksPerRev;
         double retValue = 0;
-        double currRPM = deltaRevs/deltaTime;
+        currentRPM = (int) (deltaRevs/deltaTime);
 
-        if (currRPM > targetSpeedRPM) {
+        if (currentRPM > targetSpeedRPM) {
           retValue = 0;
         }
-        if (currRPM <= targetSpeedRPM){
+        if (currentRPM <= targetSpeedRPM){
             retValue = 1;
         }
       return retValue;

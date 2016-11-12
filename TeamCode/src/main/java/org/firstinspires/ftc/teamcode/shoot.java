@@ -34,24 +34,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-
-/**
- * This file contains an example of an iterative (Non-Linear) "OpMode".
- * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
- * The names of OpModes appear on the menu of the FTC Driver Station.
- * When an selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
- * <p>
- * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
- * It includes all the skeletal structure that all iterative OpModes contain.
- * <p>
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
 
 @Autonomous(name = "shoot only", group = "")  // @Autonomous(...) is the other common choice
 
@@ -59,8 +43,17 @@ public class shoot extends OpMode {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
     private Shooter ballShooter = null;
-    int stage;
 
+
+    public static int spinupDelay = 0;
+    public static int firstShot = 1;
+    public static int resetDelay = 2;
+    public static int secondShot = 3;
+    public static int spinDownDelay = 4;
+    public static int turnOffShooters = 5;
+
+    private boolean done = false;
+    int stage;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -68,9 +61,9 @@ public class shoot extends OpMode {
     @Override
     public void init() {
         telemetry.addData("Status", "Initialized");
-
         Shooter ballShooter = new Shooter();
-        telemetry.addData("Status", "new shooter");
+        ballShooter.hardwareMap = hardwareMap;
+        ballShooter.init();
     }
 
     /*
@@ -86,64 +79,59 @@ public class shoot extends OpMode {
      */
     @Override
     public void start() {
+
+        ballShooter.start();
         ballShooter.setMotorSpeed(4800);
         runtime.reset();
-        stage = Settings.stage1FIRE;
+        stage = spinupDelay;
     }
-
 
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
-
     public void loop() {
-        telemetry.addData("Status", "Running: " + runtime.toString());
-            ballShooter.loop();
-        if (stage == Settings.stageShooterSpinUp){
 
-            if (runtime.time()>3){
-            stage = Settings.stage1FIRE;
+        telemetry.addData("Status", "Running:" +  ballShooter.getMotorSpeed());
+        ballShooter.loop();
 
-
+        if (stage == spinupDelay) {
+            if (runtime.time() > 3.0) {
+                stage = firstShot;
             }
-
-
         }
 
-        if (stage == Settings.stage1FIRE) {
-       //     leftShootMotor.setPower(Settings.spinnerShooterMiddle);
-       //     rightShootMotor.setPower(-Settings.spinnerShooterMiddle);
-
-            if (runtime.seconds() > Settings.firstLaunch && runtime.seconds() < Settings.firstReset) {
-                ballShooter.shoot();
-            if (ballShooter.isTriggerReset()){
-
-
-            }
-            }
-            if (runtime.seconds() > Settings.firstReset && runtime.seconds() < Settings.secondLaunch) {
-
-            }
-            if (runtime.seconds() > Settings.secondLaunch && runtime.seconds() < Settings.secondReset) {
-
-            }
-            if (runtime.seconds() > Settings.secondReset && runtime.seconds() < Settings.turnOffShooter) {
-
-            }
-            if (runtime.seconds() > Settings.turnOffShooter) {
-                ballShooter.setMotorSpeed(0);
-                stage = Settings.stage2Charge;
-            }
-
-
-
-
-
-
-
-
+        if (stage == firstShot) {
+            ballShooter.shoot();
+            stage = resetDelay;
+            runtime.reset();
         }
 
+        if (stage == resetDelay) {
+            if (runtime.time() > 3.0) {
+                stage = secondShot;
+            }
+        }
+
+        if (stage == secondShot) {
+            ballShooter.shoot();
+            stage = spinDownDelay;
+            runtime.reset();
+        }
+
+        if (stage == spinDownDelay) {
+            if (runtime.time() > 2.0) {
+                stage = secondShot;
+            }
+        }
+
+        if (stage == turnOffShooters) {
+            ballShooter.setMotorSpeed(0);
+            done = true;
+        }
+    }
+
+    public boolean isDone() {
+        return done;
     }
 }
