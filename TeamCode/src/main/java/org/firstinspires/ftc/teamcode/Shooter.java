@@ -8,12 +8,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Shooter extends OpMode {
 
-    //Tri state the trigger states...
+    //Trigger position stages ...
     public static int triggerPositionReset = 0;
-    public static int triggerPositionMoving = 1;
+    public static int triggerPositionMoving2Shoot = 1;
     public static int triggerPositionShoot = 2;
+    public static int triggerPositionMoving2Reset = 3;
 
-    private int triggerPosition = triggerPositionMoving;
+    private int triggerPosition = triggerPositionMoving2Reset;
 
     private DcMotor leftShootMotor = null;
     private DcMotor rightShootMotor = null;
@@ -31,29 +32,29 @@ public class Shooter extends OpMode {
     private SpeedController shotspeedLeftControler = null;
 
     public void init() {
-
         leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
         rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
         shootTrigger = hardwareMap.servo.get("trigger");
-        shotTimer = new ElapsedTime();
         speedControlerInitTimer = new ElapsedTime();
+        shotTimer = new ElapsedTime();
         leftShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rightShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        setMotorSpeed(0);
-        resetTrigger();
         shotspeedRightControler = new SpeedController(0);
         shotspeedLeftControler = new SpeedController(0);
         telemetry.addData("Status", "Initialized");
-
     }
 
     public void start() {
-
+        shotTimer.reset();
+        speedControlerInitTimer.reset();
+        resetTrigger();
+        setMotorSpeed(0);
     }
 
-    public int getMotorSpeed(){
-      return (int )(shotspeedLeftControler.getMeasuredRPM() +
-      shotspeedRightControler.getMeasuredRPM()) /2 ;
+    public int getMotorSpeed() {
+        //return the measured motor speed
+        return (int) (shotspeedLeftControler.getMeasuredRPM() +
+                shotspeedRightControler.getMeasuredRPM()) / 2;
     }
 
     public void setMotorSpeed(int speedRPM) {
@@ -75,17 +76,16 @@ public class Shooter extends OpMode {
     private void pullTrigger() {
         //moves the trigger to the shoot position
         shootTrigger.setPosition(Settings.launch);
-        triggerPosition = triggerPositionMoving;
+        triggerPosition = triggerPositionMoving2Shoot;
     }
 
     private void resetTrigger() {
         //moves the trigger to the reset position
         shootTrigger.setPosition(Settings.reset);
-        triggerPosition = triggerPositionMoving;
+        triggerPosition = triggerPositionMoving2Reset;
     }
 
     public boolean isTriggerReset() {
-
         return triggerPosition == triggerPositionReset;
     }
 
@@ -96,25 +96,26 @@ public class Shooter extends OpMode {
     }
 
     public void loop() {
-        // put this in the loop to make the shooter cycle
+        // put this in the parent.loop() to make the shooter cycle
 
-        if (isTriggerInPosition(Settings.reset, Settings.posTriggerTol)) {
+        if (isTriggerInPosition(Settings.reset, Settings.posTriggerTol) &&
+                (triggerPosition == triggerPositionMoving2Reset)) {
             triggerPosition = triggerPositionReset;
-        } else if (isTriggerInPosition(Settings.launch, Settings.posTriggerTol)) {
-            triggerPosition = triggerPositionShoot;
-            resetTrigger();
-        } else {
-            triggerPosition = triggerPositionMoving;
         }
 
-        double currTime = speedControlerInitTimer.time();
-        if (currTime > 1.0) {
-            currTime = 0;
+        if (isTriggerInPosition(Settings.launch, Settings.posTriggerTol) &&
+                (triggerPosition == triggerPositionMoving2Shoot)) {
+            triggerPosition = triggerPositionShoot;
+            resetTrigger();
+        }
+
+        double currTime = speedControlerInitTimer.milliseconds();
+        if (currTime > 1000.0) {
+            currTime = 1;
             speedControlerInitTimer.reset();
             shotspeedRightControler.Init(currTime, rightShootMotor.getCurrentPosition());
             shotspeedLeftControler.Init(currTime, leftShootMotor.getCurrentPosition());
         }
-
         adjustSpeed(currTime);
     }
 
@@ -130,21 +131,17 @@ public class Shooter extends OpMode {
             retValue = false;
         }
         return retValue;
-
     }
 
-    private void adjustSpeed(double currTime) {
-        //Read encoders and adjust speed as needed to bring it back to
-        //set speed.
-
+    private void adjustSpeed(double currTimemSeconds) {
+        //Read encoders and adjust speed as needed to bring it back to set speed.
         //calculate  right motor adjustment
-        double rightMotorAdjustment = shotspeedRightControler.getMotorPower(currTime, rightShootMotor.getCurrentPosition());
+        double rightMotorAdjustment = shotspeedRightControler.getMotorPower(currTimemSeconds, rightShootMotor.getCurrentPosition());
         //calculate left motor adjustment
-        double leftMotorAdjustment = shotspeedRightControler.getMotorPower(currTime, leftShootMotor.getCurrentPosition());
+        double leftMotorAdjustment = shotspeedRightControler.getMotorPower(currTimemSeconds, leftShootMotor.getCurrentPosition());
         //act on right motor adjustment
         rightShootMotor.setPower(rightMotorAdjustment);
         //act on left motor adjustment
         leftShootMotor.setPower(leftMotorAdjustment);
-
     }
 }

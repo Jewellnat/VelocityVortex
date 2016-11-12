@@ -45,12 +45,12 @@ public class shoot extends OpMode {
     private Shooter ballShooter = null;
 
 
-    public static int spinupDelay = 0;
-    public static int firstShot = 1;
-    public static int resetDelay = 2;
-    public static int secondShot = 3;
-    public static int spinDownDelay = 4;
-    public static int turnOffShooters = 5;
+    public static int stageSpinupDelay = 0;
+    public static int stageFirstShot = 1;
+    public static int stageResetDelay = 2;
+    public static int stageSecondShot = 3;
+    public static int stageSpinDownDelay = 4;
+    public static int stageTurnOffShooters = 5;
 
     private boolean done = false;
     int stage;
@@ -83,7 +83,7 @@ public class shoot extends OpMode {
         ballShooter.start();
         ballShooter.setMotorSpeed(4800);
         runtime.reset();
-        stage = spinupDelay;
+        stage = stageSpinupDelay;
     }
 
     /*
@@ -92,40 +92,47 @@ public class shoot extends OpMode {
     @Override
     public void loop() {
 
-        telemetry.addData("Status", "Running:" +  ballShooter.getMotorSpeed());
+        telemetry.addData("Status", "Running, ShooterRPM=" + ballShooter.getMotorSpeed());
         ballShooter.loop();
 
-        if (stage == spinupDelay) {
+        if (stage == stageSpinupDelay) {
             if (runtime.time() > 3.0) {
-                stage = firstShot;
+                stage = stageFirstShot;
             }
         }
 
-        if (stage == firstShot) {
-            ballShooter.shoot();
-            stage = resetDelay;
-            runtime.reset();
-        }
-
-        if (stage == resetDelay) {
-            if (runtime.time() > 3.0) {
-                stage = secondShot;
+        if (stage == stageFirstShot) {
+            if (ballShooter.isTriggerReset()) {
+                ballShooter.shoot();
+                stage = stageResetDelay;
+                runtime.reset();
             }
         }
 
-        if (stage == secondShot) {
-            ballShooter.shoot();
-            stage = spinDownDelay;
-            runtime.reset();
+        if (stage == stageResetDelay) {
+            //This delay gives motors time to ramp back up
+            if (runtime.time() > 3.0) {
+                stage = stageSecondShot;
+            }
         }
 
-        if (stage == spinDownDelay) {
+        if (stage == stageSecondShot) {
+            if (ballShooter.isTriggerReset()) {
+                ballShooter.shoot();
+                stage = stageSpinDownDelay;
+                runtime.reset();
+            }
+        }
+
+        if (stage == stageSpinDownDelay) {
+            //This delay makes sure ball is gone before shutting down shooter
             if (runtime.time() > 2.0) {
-                stage = secondShot;
+                stage = stageTurnOffShooters;
+                runtime.reset();
             }
         }
 
-        if (stage == turnOffShooters) {
+        if (stage == stageTurnOffShooters) {
             ballShooter.setMotorSpeed(0);
             done = true;
         }
