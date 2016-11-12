@@ -16,6 +16,7 @@ public class Settings {
     public static int stagemiddle1shoot = 1;
     public static int stageDriveForwardmiddle2 = 2;
     public static int stageStoppingmiddle3 = 3;
+    public static int stageShooterSpinUp = 0;
     public static double normalDriveSpeed = 0.75;
     public static int cornerDriveDistance = 155;
     public static int middleDriveDistance = 140;

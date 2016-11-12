@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Hardware;
 
 
-public class Shooter {
+public class Shooter extends OpMode {
 
     //Tri state the trigger states...
     public static int triggerPositionReset = 0;
@@ -16,7 +17,7 @@ public class Shooter {
 
     private DcMotor leftShootMotor = null;
     private DcMotor rightShootMotor = null;
-    private Servo trigger = null;
+    private Servo shootTrigger = null;
     private int shooterSpeedRPM = 1;
     private ElapsedTime shotTimer = null;   //time for trigger reset
     private ElapsedTime speedControlerInitTimer = null;
@@ -34,7 +35,8 @@ public class Shooter {
 
       leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
       rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
-      shootTrigger = hardwareMap.servo.get("shootTrigger");
+    
+        shootTrigger = hardwareMap.servo.get("trigger");
       shotTimer = new ElapsedTime();
 
       speedControlerInitTimer = new ElapsedTime();
@@ -48,6 +50,9 @@ public class Shooter {
       resetTrigger();
       shotspeedRightControler = new SpeedController(0);
       shotspeedLeftControler = new SpeedController(0);
+
+    }
+    public void init(){
 
     }
 
@@ -116,7 +121,7 @@ public class Shooter {
       //Is the trigger in the requested position ?  with some tollerance window
 
     boolean retValue = false;
-        double currPos = shootTrigger.getCurrentPosition();
+        double currPos = shootTrigger.getPosition();
       if (currPos > (setPosition - tol) &&
            currPos < (setPosition + tol )) {
         retValue = true;
@@ -128,14 +133,14 @@ public class Shooter {
 
     }
 
-    private void adjustSpeed(currTime){
+    private void adjustSpeed(double currTime){
       //Read encoders and adjust speed as needed to bring it back to
       //set speed.
 
       //calculate  right motor adjustment
-      rightMotorAdjustment = shotspeedRightControler.getMotorSpeed(currTime, rightShootMotor.getCurrentPosition());
+      double rightMotorAdjustment = shotspeedRightControler.getMotorSpeed(currTime, rightShootMotor.getCurrentPosition());
       //calculate left motor adjustment
-      leftMotorAdjustment = shotspeedRightControler.getMotorSpeed(currTime, leftShootMotor.getCurrentPosition());
+       double leftMotorAdjustment = shotspeedRightControler.getMotorSpeed(currTime, leftShootMotor.getCurrentPosition());
       //act on right motor adjustment
       rightShootMotor.setPower(rightMotorAdjustment);
       //act on left motor adjustment

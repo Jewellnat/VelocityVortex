@@ -58,16 +58,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class shoot extends OpMode {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftShootMotor = null;
-    private DcMotor rightShootMotor = null;
-    private DcMotor leftDriveMotor = null;
-    private DcMotor rightDriveMotor = null;
-    private Servo shootTrigger = null;
-    //private GyroSensor gyroSensor = null;
-    private DcMotor sweeperMotor = null;
-    private Servo beaconServo = null;
-    //privste ColorSensor colorSensor = null;
-
+    private Shooter ballShooter = null;
     int stage;
 
 
@@ -78,24 +69,8 @@ public class shoot extends OpMode {
     public void init() {
         telemetry.addData("Status", "Initialized");
 
-        leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
-        rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
-        leftDriveMotor = hardwareMap.dcMotor.get("leftDriveMotor");
-        rightDriveMotor = hardwareMap.dcMotor.get("rightDriveMotor");
-        leftDriveMotor.setDirection(DcMotor.Direction.REVERSE);
-        leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
-        rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
-        shootTrigger = hardwareMap.servo.get("trigger");
-        //gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
-        leftShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        sweeperMotor = hardwareMap.dcMotor.get("sweeperMotor");
-        //colorSensor = hardwareMap.colorSensor.get("colorSensor");
-        beaconServo = hardwareMap.servo.get("bacon");
-        leftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Shooter ballShooter = new Shooter();
+        telemetry.addData("Status", "new shooter");
     }
 
     /*
@@ -103,6 +78,7 @@ public class shoot extends OpMode {
      */
     @Override
     public void init_loop() {
+        ballShooter.init_loop();
     }
 
     /*
@@ -110,9 +86,9 @@ public class shoot extends OpMode {
      */
     @Override
     public void start() {
+        ballShooter.setMotorSpeed(4800);
         runtime.reset();
         stage = Settings.stage1FIRE;
-        shootTrigger.setPosition(Settings.reset);
     }
 
 
@@ -123,50 +99,48 @@ public class shoot extends OpMode {
 
     public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
+            ballShooter.loop();
+        if (stage == Settings.stageShooterSpinUp){
+
+            if (runtime.time()>3){
+            stage = Settings.stage1FIRE;
+
+
+            }
+
+
+        }
 
         if (stage == Settings.stage1FIRE) {
-            leftShootMotor.setPower(Settings.spinnerShooterMiddle);
-            rightShootMotor.setPower(-Settings.spinnerShooterMiddle);
+       //     leftShootMotor.setPower(Settings.spinnerShooterMiddle);
+       //     rightShootMotor.setPower(-Settings.spinnerShooterMiddle);
 
             if (runtime.seconds() > Settings.firstLaunch && runtime.seconds() < Settings.firstReset) {
-                shootTrigger.setPosition(Settings.launch);
+                ballShooter.shoot();
+            if (ballShooter.isTriggerReset()){
+
+
+            }
             }
             if (runtime.seconds() > Settings.firstReset && runtime.seconds() < Settings.secondLaunch) {
-                shootTrigger.setPosition(Settings.reset);
+
             }
             if (runtime.seconds() > Settings.secondLaunch && runtime.seconds() < Settings.secondReset) {
-                shootTrigger.setPosition(Settings.launch);
+
             }
             if (runtime.seconds() > Settings.secondReset && runtime.seconds() < Settings.turnOffShooter) {
-                shootTrigger.setPosition(Settings.reset);
+
             }
             if (runtime.seconds() > Settings.turnOffShooter) {
-                leftShootMotor.setPower(0);
-                rightShootMotor.setPower(0);
+                ballShooter.setMotorSpeed(0);
                 stage = Settings.stage2Charge;
             }
-//                leftDriveMotor.setPower(Settings.driveSpeed);
-//                rightDriveMotor.setPower(Settings.driveSpeed);
-//                stage = Settings.stage2Charge;
-//
-//            }
-//        }
-//        if (stage == Settings.stage2Charge) {
-//            leftDriveMotor.setPower(Settings.driveSpeed);
-//            rightDriveMotor.setPower(Settings.driveSpeed);
-//            double leftcm = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
-//            double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
-//            double averagecm = (leftcm + rightcm) / 2;
-//            if (averagecm > Settings.middleDriveDistance) {
-//                stage = Settings.stage3Stop;
-//
-//            }
-//        }
-//
-//        if (stage == Settings.stage3Stop) {
-//            leftDriveMotor.setPower(0);
-//            rightDriveMotor.setPower(0);
-//        }
+
+
+
+
+
+
 
 
         }
