@@ -46,7 +46,7 @@ public class Settings {
     public static double spinnerShooterMiddle = .25;
     public static int shooterTicksPerRev = 7;
     public static int shooterMotorMaxRPM = 6000;
-    public static double posTriggerTol = .02;
+    public static double posTriggerTol = .0;
     public static double Tics2CM (int tics){
         return tics / TicsPerCM;
 

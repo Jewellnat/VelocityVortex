@@ -42,7 +42,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class shoot extends OpMode {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    private Shooter ballShooter = null;
+    Shooter ballShooter = new Shooter();
 
 
     public static int stageSpinupDelay = 0;
@@ -60,10 +60,11 @@ public class shoot extends OpMode {
      */
     @Override
     public void init() {
-        telemetry.addData("Status", "Initialized");
-        Shooter ballShooter = new Shooter();
+
         ballShooter.hardwareMap = hardwareMap;
+        ballShooter.telemetry = telemetry;
         ballShooter.init();
+        telemetry.addData("Status", "Initialized");
     }
 
     /*
@@ -81,7 +82,7 @@ public class shoot extends OpMode {
     public void start() {
 
         ballShooter.start();
-        ballShooter.setMotorSpeed(4800);
+        ballShooter.setMotorSpeed(.40);
         runtime.reset();
         stage = stageSpinupDelay;
     }
@@ -96,7 +97,7 @@ public class shoot extends OpMode {
         ballShooter.loop();
 
         if (stage == stageSpinupDelay) {
-            if (runtime.time() > 3.0) {
+            if (runtime.time() > 5.0) {
                 stage = stageFirstShot;
             }
         }
@@ -111,7 +112,7 @@ public class shoot extends OpMode {
 
         if (stage == stageResetDelay) {
             //This delay gives motors time to ramp back up
-            if (runtime.time() > 3.0) {
+            if (runtime.time() > 5.0) {
                 stage = stageSecondShot;
             }
         }
