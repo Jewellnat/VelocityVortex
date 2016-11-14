@@ -82,7 +82,8 @@ public class shoot extends OpMode {
     public void start() {
 
         ballShooter.start();
-        ballShooter.setMotorSpeed(.40);
+        //ballShooter.setMotorSpeed(.40);
+        ballShooter.setMotorRPM(4000);
         runtime.reset();
         stage = stageSpinupDelay;
     }
@@ -134,7 +135,7 @@ public class shoot extends OpMode {
         }
 
         if (stage == stageTurnOffShooters) {
-            ballShooter.setMotorSpeed(0);
+            ballShooter.setMotorRPM(0);
             done = true;
         }
     }

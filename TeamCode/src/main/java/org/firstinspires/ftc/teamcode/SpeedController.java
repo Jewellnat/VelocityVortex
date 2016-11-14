@@ -7,39 +7,26 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class SpeedController {
-    double startingMiliseconds;
-    int targetSpeedRPM;
-    int startingTicks;
+    double targetSpeedRPM;
     double  currentRPM = 0;
-    private ElapsedTime speedTimer = new ElapsedTime();;
 
-    public SpeedController(int targetSpeedRPM) {
+    public SpeedController(double targetSpeedRPM) {
 
         this.targetSpeedRPM = targetSpeedRPM;
     }
 
-    public void setTargetSpeedRPM(int targetSpeedRPM) {
+    public void setTargetSpeedRPM(double targetSpeedRPM) {
         this.targetSpeedRPM = targetSpeedRPM;
     }
 
-    public void Init(double startingMiliseconds, int startingTicks) {
-        this.startingMiliseconds = startingMiliseconds;
-        this.startingTicks = startingTicks;
-    }
 
     public double getMeasuredRPM() {
         return currentRPM;
     }
 
-    public double getMotorPower(double deltaTime, int deltaTicks) {
-        double deltaRevs = deltaTicks / Settings.shooterTicksPerRev;
+    public double getMotorPower(double deltaMilliSec, int deltaTicks) {
         double retValue = 0;
-        // times 1000 because time is milliseconds * 60 seconds per minute
-        currentRPM = (deltaRevs / deltaTime) * 60000;
-
-        if (currentRPM > targetSpeedRPM) {
-            retValue = 0;
-        }
+        currentRPM = (deltaTicks/ deltaMilliSec * 60000 / Settings.shooterTicksPerRev);
         if (currentRPM <= targetSpeedRPM) {
             retValue = 1;
         }
