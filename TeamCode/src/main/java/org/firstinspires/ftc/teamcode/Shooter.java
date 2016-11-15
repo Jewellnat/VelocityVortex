@@ -72,7 +72,7 @@ public class Shooter extends OpMode {
                 shotspeedRightControler.getMeasuredRPM()) / 2;
     }
 
-    public void setMotorPower(double ShootMotorPower) {
+    /*public void setMotorPower(double ShootMotorPower) {
         //set the shooter motor RPM
 
         if (shooterPower != ShootMotorPower) {
@@ -83,12 +83,11 @@ public class Shooter extends OpMode {
             if (shooterPower < 0) {
                 shooterPower = 0;
             }
-            //leftShootMotor.setPower(shooterPower);
-            //rightShootMotor.setPower(shooterPower);
-            //shotspeedRightControler.setTargetSpeedRPM();
-            //shotspeedLeftControler.setTargetSpeedRPM();
+            leftShootMotor.setPower(shooterPower);
+            rightShootMotor.setPower(shooterPower);
         }
     }
+*/
 
     public void setMotorRPM(double shootMotorRPM){
 
