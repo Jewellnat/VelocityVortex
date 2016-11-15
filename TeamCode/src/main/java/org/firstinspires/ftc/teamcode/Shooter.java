@@ -83,8 +83,8 @@ public class Shooter extends OpMode {
             if (shooterPower < 0) {
                 shooterPower = 0;
             }
-            leftShootMotor.setPower(shooterPower);
-            rightShootMotor.setPower(shooterPower);
+            //leftShootMotor.setPower(shooterPower);
+            //rightShootMotor.setPower(shooterPower);
             //shotspeedRightControler.setTargetSpeedRPM();
             //shotspeedLeftControler.setTargetSpeedRPM();
         }

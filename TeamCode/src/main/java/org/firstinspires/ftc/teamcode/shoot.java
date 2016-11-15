@@ -115,6 +115,7 @@ public class shoot extends OpMode {
             //This delay gives motors time to ramp back up
             if (runtime.time() > 5.0) {
                 stage = stageSecondShot;
+                runtime.reset();
             }
         }
 
