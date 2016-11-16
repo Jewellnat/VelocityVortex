@@ -147,7 +147,7 @@ public class Shooter extends OpMode {
         telemetry.addData("LeftShooterCurrPos =", leftShooterCurrPos);
         telemetry.addData("LeftShooterDeltaPos =", leftShooterDeltaPos);
 
-        if (speedControlerInitTimer.milliseconds() > 200.0) {
+        if (speedControlerInitTimer.milliseconds() > 20.0) {
             adjustSpeed(speedControlerInitTimer.milliseconds());
             speedControlerInitTimer.reset();
         }
@@ -174,5 +174,5 @@ public class Shooter extends OpMode {
         rightShootMotor.setPower(rightMotorAdjustment);
         //act on left motor adjustment
         leftShootMotor.setPower(leftMotorAdjustment);
-    }
+        }
 }
