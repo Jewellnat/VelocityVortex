@@ -7,12 +7,16 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class SpeedController {
-    double targetSpeedRPM;
-    double  currentRPM = 0;
-
+    private double targetSpeedRPM;
+    private double  currentRPM = 0;
+    private double tol = 250;
+    private double lowerLimit = 0;
+    private double upperLimit = 0;
     public SpeedController(double targetSpeedRPM) {
 
         this.targetSpeedRPM = targetSpeedRPM;
+        lowerLimit = targetSpeedRPM - tol;
+        upperLimit = targetSpeedRPM + tol;
     }
 
     public void setTargetSpeedRPM(double targetSpeedRPM) {
@@ -25,9 +29,17 @@ public class SpeedController {
     }
 
     public double getMotorPower(double deltaMilliSec, int deltaTicks) {
+        //special case of 0  stop the motors
+        if (targetSpeedRPM  < 1) {return (0);}
+
         double retValue = 0;
         currentRPM = (deltaTicks/ deltaMilliSec * 60000 / Settings.shooterTicksPerRev);
-        if (currentRPM <= targetSpeedRPM) {
+
+        //If we are close try to stay there.
+        if ((currentRPM > lowerLimit)  && (currentRPM < upperLimit)){
+             retValue = targetSpeedRPM/Settings.shooterMotorMaxRPM;
+        }
+        else if (currentRPM <= targetSpeedRPM) {
             retValue = 1;
         }
         return retValue;
