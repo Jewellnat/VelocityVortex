@@ -36,11 +36,14 @@ public class SpeedController {
         currentRPM = (deltaTicks/ deltaMilliSec * 60000 / Settings.shooterTicksPerRev);
 
         //If we are close try to stay there.
-        if ((currentRPM > lowerLimit)  && (currentRPM < upperLimit)){
+        if ((currentRPM > lowerLimit)  && (currentRPM <= targetSpeedRPM)){
              retValue = targetSpeedRPM/Settings.shooterMotorMaxRPM;
         }
-        else if (currentRPM <= targetSpeedRPM) {
-            retValue = 1;
+        else if ((currentRPM < upperLimit)  && (currentRPM > targetSpeedRPM)){
+             retValue = .3 * targetSpeedRPM/Settings.shooterMotorMaxRPM);
+        }
+        else if (currentRPM <= lowerLimit) {
+            retValue = 1.0;
         }
         return retValue;
     }
