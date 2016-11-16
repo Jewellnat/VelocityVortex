@@ -66,7 +66,7 @@ public class Shooter extends OpMode {
         setMotorRPM(0);
     }
 
-    public int getMotorSpeed() {
+    public int getMotorRPM() {
         //return the measured motor speed
         return (int) (shotspeedLeftControler.getMeasuredRPM() +
                 shotspeedRightControler.getMeasuredRPM()) / 2;
