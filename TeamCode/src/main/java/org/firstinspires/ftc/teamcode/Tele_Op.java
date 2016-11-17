@@ -86,7 +86,6 @@ public class Tele_Op extends OpMode {
          */
         leftDriveMotor = hardwareMap.dcMotor.get("leftDriveMotor");
         rightDriveMotor = hardwareMap.dcMotor.get("rightDriveMotor");
-        leftDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
         rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
         leftShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -138,8 +137,8 @@ public class Tele_Op extends OpMode {
             rightTriggerPressed = false;
         }
         if (rightTriggerPressed) {
-            leftShootMotor.setPower(Settings.shooterSpeedTeleOP);
-            rightShootMotor.setPower(Settings.shooterSpeedTeleOP);
+            leftShootMotor.setPower(Settings.shooterRPM);
+            rightShootMotor.setPower(Settings.shooterRPM);
         } else {
             leftShootMotor.setPower(0);
             rightShootMotor.setPower(0);

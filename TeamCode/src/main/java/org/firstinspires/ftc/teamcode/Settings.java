@@ -37,6 +37,12 @@ public class Settings {
     public static double shooterSpeedTeleOP = .25;
     public static double spinnerShooterAuto = .3;
     public static double bestShooterSpeed = 120 * Math.PI;
+    public static double shooterRPM = 4300;
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+    }
+
     public static int beaconRight = 1;
     public static int beaconLeft = 0;
     public static int stage1FIRE = 1;
