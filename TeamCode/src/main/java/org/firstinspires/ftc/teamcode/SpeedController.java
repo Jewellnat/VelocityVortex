@@ -40,7 +40,7 @@ public class SpeedController {
              retValue = targetSpeedRPM/Settings.shooterMotorMaxRPM;
         }
         else if ((currentRPM < upperLimit)  && (currentRPM > targetSpeedRPM)){
-             retValue = .3 * targetSpeedRPM/Settings.shooterMotorMaxRPM);
+             retValue = .3 * targetSpeedRPM/Settings.shooterMotorMaxRPM;
         }
         else if (currentRPM <= lowerLimit) {
             retValue = 1.0;
