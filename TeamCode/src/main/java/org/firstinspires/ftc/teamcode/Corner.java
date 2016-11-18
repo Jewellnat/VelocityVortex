@@ -35,12 +35,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Hardware;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.GyroSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -48,10 +44,10 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
  * The names of OpModes appear on the menu of the FTC Driver Station.
  * When an selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
- * <p>
+ * <p/>
  * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
  * It includes all the skeletal structure that all iterative OpModes contain.
- * <p>
+ * <p/>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
@@ -59,6 +55,7 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
 @Autonomous(name = "Corner", group = "")  // @Autonomous(...) is the other common choice
 
 public class Corner extends OpMode {
+    int stage;
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftShootMotor = null;
@@ -66,13 +63,10 @@ public class Corner extends OpMode {
     private DcMotor leftDriveMotor = null;
     private DcMotor rightDriveMotor = null;
     private Servo shootTrigger = null;
-   // private GyroSensor gyroSensor;
+    // private GyroSensor gyroSensor;
     private DcMotor sweeperMotor = null;
-   // private ColorSensor colorSensor;
+    // private ColorSensor colorSensor;
     private Servo beaconServo = null;
-
-    int stage;
-
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -93,9 +87,9 @@ public class Corner extends OpMode {
         leftShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rightShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         shootTrigger = hardwareMap.servo.get("trigger");
-       // gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
+        // gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
         sweeperMotor = hardwareMap.dcMotor.get("sweeperMotor");
-       // colorSensor = hardwareMap.colorSensor.get("colorSensor");
+        // colorSensor = hardwareMap.colorSensor.get("colorSensor");
         beaconServo = hardwareMap.servo.get("bacon");
     }
 

@@ -46,10 +46,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * The names of OpModes appear on the menu of the FTC Driver Station.
  * When an selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
- * <p>
+ * <p/>
  * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
  * It includes all the skeletal structure that all iterative OpModes contain.
- * <p>
+ * <p/>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
@@ -59,6 +59,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class MiddleRed extends OpMode {
     /* Declare OpMode members. */
     shoot doubleShooter = new shoot();
+    int stage;
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftShootMotor = null;
     private DcMotor rightShootMotor = null;
@@ -66,11 +67,8 @@ public class MiddleRed extends OpMode {
     private DcMotor rightDriveMotor = null;
     private GyroSensor gyroSensor = null;
     private DcMotor sweeperMotor = null;
-    private Servo beaconServo = null;
     //privste ColorSensor colorSensor = null;
-
-    int stage;
-
+    private Servo beaconServo = null;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -150,19 +148,19 @@ public class MiddleRed extends OpMode {
 
             }
         }
-        if (stage == Settings.stage3turn180){
+        if (stage == Settings.stage3turn180) {
             leftDriveMotor.setPower(-Settings.driveSpeed);
             rightDriveMotor.setPower(Settings.driveSpeed);
             int gyroHeading = gyroSensor.getHeading();
-           if (gyroHeading < 190 && gyroHeading > 90 ){
-               leftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-               rightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-               leftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-               rightDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-               stage = Settings.stage4backup;
-           }
+            if (gyroHeading < 190 && gyroHeading > 90) {
+                leftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                rightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                leftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                rightDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                stage = Settings.stage4backup;
+            }
         }
-        if (stage == Settings.stage4backup){
+        if (stage == Settings.stage4backup) {
             leftDriveMotor.setPower(-Settings.driveSpeed);
             rightDriveMotor.setPower(-Settings.driveSpeed);
             double leftcm = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
@@ -173,10 +171,6 @@ public class MiddleRed extends OpMode {
 
             }
         }
-
-
-
-
 
 
         if (stage == Settings.stage5stop) {

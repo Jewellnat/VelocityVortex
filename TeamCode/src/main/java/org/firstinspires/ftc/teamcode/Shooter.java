@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 public class Shooter extends OpMode {
@@ -13,9 +13,9 @@ public class Shooter extends OpMode {
     public static int triggerPositionMoving2Shoot = 1;
     public static int triggerPositionShoot = 2;
     public static int triggerPositionMoving2Reset = 3;
-
+    public double timeTriggerUp = 1.0;
+    public double timeTriggerDown = 2.0;
     private int triggerPosition = triggerPositionMoving2Reset;
-
     private DcMotor leftShootMotor = null;
     private DcMotor rightShootMotor = null;
     private Servo shootTrigger = null;
@@ -23,9 +23,6 @@ public class Shooter extends OpMode {
     private double shooterRPMsetPoint = 0;
     private ElapsedTime shotTimer = null;   //time for trigger reset
     private ElapsedTime speedControlerInitTimer = null;
-    public double timeTriggerUp = 1.0;
-    public double timeTriggerDown = 2.0;
-
     private double leftshooterSpeedRPM = 0;
     private double rightshooterSpeedRPM = 0;
 
@@ -89,19 +86,19 @@ public class Shooter extends OpMode {
     }
 */
 
-    public void setMotorRPM(double shootMotorRPM){
+    public void setMotorRPM(double shootMotorRPM) {
 
-      if (shooterRPMsetPoint != shootMotorRPM) {
-          shooterRPMsetPoint= shootMotorRPM;
-          if ( shooterRPMsetPoint > Settings.shooterMotorMaxRPM) {
-              shooterRPMsetPoint= Settings.shooterMotorMaxRPM;
-          }
-          if (shooterRPMsetPoint < 0) {
-              shooterRPMsetPoint = 0;
-          }
-          shotspeedRightControler.setTargetSpeedRPM(shooterRPMsetPoint);
-          shotspeedLeftControler.setTargetSpeedRPM(shooterRPMsetPoint);
-      }
+        if (shooterRPMsetPoint != shootMotorRPM) {
+            shooterRPMsetPoint = shootMotorRPM;
+            if (shooterRPMsetPoint > Settings.shooterMotorMaxRPM) {
+                shooterRPMsetPoint = Settings.shooterMotorMaxRPM;
+            }
+            if (shooterRPMsetPoint < 0) {
+                shooterRPMsetPoint = 0;
+            }
+            shotspeedRightControler.setTargetSpeedRPM(shooterRPMsetPoint);
+            shotspeedLeftControler.setTargetSpeedRPM(shooterRPMsetPoint);
+        }
     }
 
 
@@ -173,5 +170,5 @@ public class Shooter extends OpMode {
         rightShootMotor.setPower(rightMotorAdjustment);
         //act on left motor adjustment
         leftShootMotor.setPower(leftMotorAdjustment);
-        }
+    }
 }

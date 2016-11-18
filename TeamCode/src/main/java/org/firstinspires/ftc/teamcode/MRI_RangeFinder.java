@@ -10,12 +10,10 @@ import com.qualcomm.robotcore.hardware.I2cDeviceSynchImpl;
  */
 
 public class MRI_RangeFinder {
-    private byte[] range1Cache; //The read will return an array of bytes. They are stored in this variable
-
-    private I2cAddr RANGE1ADDRESS = new I2cAddr(0x14); //Default I2C address for MR Range (7-bit)
     private static final int RANGE1_REG_START = 0x04; //Register to start reading
     private static final int RANGE1_READ_LENGTH = 2; //Number of byte to read
-
+    private byte[] range1Cache; //The read will return an array of bytes. They are stored in this variable
+    private I2cAddr RANGE1ADDRESS = new I2cAddr(0x14); //Default I2C address for MR Range (7-bit)
     private I2cDevice RANGE1;
     private I2cDeviceSynch RANGE1Reader;
 
@@ -25,11 +23,11 @@ public class MRI_RangeFinder {
         RANGE1Reader.engage();
     }
 
-    public void resetDeviceConfigurationForOpMode(){
+    public void resetDeviceConfigurationForOpMode() {
         RANGE1.resetDeviceConfigurationForOpMode();
     }
 
-    public int getDistanceCM(){
+    public int getDistanceCM() {
         range1Cache = RANGE1Reader.read(RANGE1_REG_START, RANGE1_READ_LENGTH);
 
         // index 0 is the sonar portion of the sensor.

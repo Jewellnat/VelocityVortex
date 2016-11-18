@@ -32,18 +32,13 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.I2cDevice;
-import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.GyroSensor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -51,16 +46,16 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
  * The names of OpModes appear on the menu of the FTC Driver Station.
  * When an selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
- * <p>
+ * <p/>
  * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
  * It includes all the skeletal structure that all iterative OpModes contain.
- * <p>
+ * <p/>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
- //@Autonomous(name = "Prototype", group = "")  // @Autonomous(...) is the other common choice
-    @Disabled
+//@Autonomous(name = "Prototype", group = "")  // @Autonomous(...) is the other common choice
+@Disabled
 public class Charlie_Prototype extends OpMode {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -152,19 +147,19 @@ public class Charlie_Prototype extends OpMode {
                 rightMotor.setPower(0);
             }
         }
-            if (lightAlpha < 50) {
-                if (distance > 5) {
+        if (lightAlpha < 50) {
+            if (distance > 5) {
 
-                    leftMotor.setPower(1);
-                    rightMotor.setPower(1);
-                }else{
-                  leftMotor.setPower(0);
-                  rightMotor.setPower(0);
-                }
+                leftMotor.setPower(1);
+                rightMotor.setPower(1);
+            } else {
+                leftMotor.setPower(0);
+                rightMotor.setPower(0);
             }
-            if (lightAlpha > 50) {
+        }
+        if (lightAlpha > 50) {
 
-                }
+        }
 //            if (lightAlpha > 13) {
 //                leftMotor.setPower(.05);
 //                rightMotor.setPower(1);
@@ -195,10 +190,10 @@ public class Charlie_Prototype extends OpMode {
 //        } else {
 //            leftMotor.setPower(0);
 //            rightMotor.setPower(0);
-            }
+    }
     /*
      * Code to run ONCE after the driver hits STOP
      */
 
 
-        }
+}

@@ -34,12 +34,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.GyroSensor;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -47,10 +45,10 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
  * The names of OpModes appear on the menu of the FTC Driver Station.
  * When an selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
- * <p>
+ * <p/>
  * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
  * It includes all the skeletal structure that all iterative OpModes contain.
- * <p>
+ * <p/>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
@@ -59,25 +57,26 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
 
 public class Tele_Op extends OpMode {
     /* Declare OpMode members. */
+    Shooter ballShooter = new Shooter();
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftShootMotor = null;
-    private DcMotor rightShootMotor = null;
     private DcMotor rightDriveMotor = null;
     private DcMotor leftDriveMotor = null;
     private DcMotor sweeperMotor = null;
-    private Servo shootTrigger;
+
     private Servo beaconServo;
     private boolean rightTriggerPressed;
     private boolean BeaconServoLeft;
     private boolean leftBummperPrevPressed;
-    //private ColorSensor colorSensor;
-    //private GyroSensor gyroSensor;
 
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
+
+        ballShooter.hardwareMap = hardwareMap;
+        ballShooter.telemetry = telemetry;
+        ballShooter.init();
         telemetry.addData("Status", "Initialized");
 
         /* eg: Initialize the hardware variables. Note that the strings used here as parameters
@@ -87,14 +86,10 @@ public class Tele_Op extends OpMode {
         leftDriveMotor = hardwareMap.dcMotor.get("leftDriveMotor");
         rightDriveMotor = hardwareMap.dcMotor.get("rightDriveMotor");
         leftDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
-        rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
-        leftShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         sweeperMotor = hardwareMap.dcMotor.get("sweeperMotor");
-        leftShootMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         beaconServo = hardwareMap.servo.get("bacon");
-        shootTrigger = hardwareMap.servo.get("trigger");
+        ballShooter.hardwareMap = hardwareMap;
+        ballShooter.telemetry = telemetry;
         //gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
         //colorSensor = hardwareMap.colorSensor.get("colorSensor");
         rightTriggerPressed = false;
@@ -111,6 +106,7 @@ public class Tele_Op extends OpMode {
      */
     @Override
     public void init_loop() {
+        ballShooter.init_loop();
     }
 
     /*
@@ -118,8 +114,9 @@ public class Tele_Op extends OpMode {
      */
     @Override
     public void start() {
+        ballShooter.start();
+        ballShooter.setMotorRPM(0);
         runtime.reset();
-        shootTrigger.setPosition(Settings.reset);
     }
 
     /*
@@ -127,7 +124,9 @@ public class Tele_Op extends OpMode {
      */
     @Override
     public void loop() {
-        telemetry.addData("Status", shootTrigger.getPosition());
+
+        ballShooter.loop();
+
         telemetry.addData("Status", "Running: " + runtime.toString());
         leftDriveMotor.setPower(-gamepad1.left_stick_y);
         rightDriveMotor.setPower(-gamepad1.right_stick_y);
@@ -138,11 +137,10 @@ public class Tele_Op extends OpMode {
             rightTriggerPressed = false;
         }
         if (rightTriggerPressed) {
-            leftShootMotor.setPower(Settings.shooterRPM);
-            rightShootMotor.setPower(Settings.shooterRPM);
+            ballShooter.setMotorRPM(Settings.shooterRPM);
+
         } else {
-            leftShootMotor.setPower(0);
-            rightShootMotor.setPower(0);
+            ballShooter.setMotorRPM(0);
         }
         if (gamepad2.left_bumper && leftBummperPrevPressed == false) {
             leftBummperPrevPressed = true;
@@ -160,12 +158,8 @@ public class Tele_Op extends OpMode {
 
         sweeperMotor.setPower(-gamepad2.left_stick_y);
         if (gamepad2.right_bumper) {
-            shootTrigger.setPosition(Settings.launch);
-        } else {
-            shootTrigger.setPosition(Settings.reset);
-
+            ballShooter.shoot();
         }
-
     }
 
     /*
@@ -173,6 +167,7 @@ public class Tele_Op extends OpMode {
      */
     @Override
     public void stop() {
+        ballShooter.setMotorRPM(0);
     }
 
 }
