@@ -58,7 +58,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class MiddleRed extends OpMode {
     /* Declare OpMode members. */
-    shoot doubleShooter = new shoot();
+    Shoot doubleShooter = new Shoot();
     int stage;
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftShootMotor = null;
