@@ -28,6 +28,7 @@ public class Settings {
     public static int stage5stop = 5;
     public static int cornerDriveDistance = 155;
     public static int middleDriveDistance = 140;
+    public static int middleBackupDriveDistance = -30;
     public static int redTapeLightVal = 99;
     public static double GearRatio = 1 / 1; //motor revoulutions /wheel revoulutions
     public static double TicsPerCM = (GearRatio * ticsPerRevoulution) / wheelCircumfence;
