@@ -35,12 +35,12 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.GyroSensor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Hardware;
 import com.qualcomm.robotcore.hardware.ColorSensor;
-
+import com.qualcomm.robotcore.hardware.GyroSensor;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -88,8 +88,8 @@ public class Corner extends OpMode {
         rightDriveMotor = hardwareMap.dcMotor.get("rightDriveMotor");
         leftDriveMotor.setDirection(DcMotor.Direction.REVERSE);
         leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
-        leftShootMotor.setDirection(DcMotor.Direction.REVERSE);
         rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
+        leftShootMotor.setDirection(DcMotor.Direction.REVERSE);
         leftShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rightShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         shootTrigger = hardwareMap.servo.get("trigger");
@@ -111,9 +111,9 @@ public class Corner extends OpMode {
      */
     @Override
     public void start() {
+        shootTrigger.setPosition(Settings.reset);
         runtime.reset();
         stage = Settings.stagecorner1shoot;
-        shootTrigger.setPosition(Settings.reset);
     }
 
 
@@ -160,11 +160,11 @@ public class Corner extends OpMode {
             double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
             double averagecm = (leftcm + rightcm) / 2;
             if (averagecm > Settings.cornerDriveDistance) {
-                stage = Settings.stage3Stop;
+                stage = Settings.stage3turn180;
 
             }
         }
-        if (stage == Settings.stage3Stop) {
+        if (stage == Settings.stage3turn180) {
             leftDriveMotor.setPower(0);
             rightDriveMotor.setPower(0);
         }
