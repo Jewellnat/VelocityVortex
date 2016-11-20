@@ -37,20 +37,23 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-@Autonomous(name = "shoot only", group = "")  // @Autonomous(...) is the other common choice
+@Autonomous(name = "Shoot only", group = "")  // @Autonomous(...) is the other common choice
 
 public class Shoot extends OpMode {
+    /* Declare OpMode members. */
+    private ElapsedTime runtime = new ElapsedTime();
+    Shooter ballShooter = new Shooter();
+
+
     public static int stageSpinupDelay = 0;
     public static int stageFirstShot = 1;
     public static int stageResetDelay = 2;
     public static int stageSecondShot = 3;
     public static int stageSpinDownDelay = 4;
     public static int stageTurnOffShooters = 5;
-    Shooter ballShooter = new Shooter();
-    int stage;
-    /* Declare OpMode members. */
-    private ElapsedTime runtime = new ElapsedTime();
+
     private boolean done = false;
+    int stage;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -80,7 +83,7 @@ public class Shoot extends OpMode {
 
         ballShooter.start();
         //ballShooter.setMotorSpeed(.40);
-        ballShooter.setMotorRPM(Settings.shooterRPM);
+        ballShooter.setMotorRPM(Settings.shooterMotorRPM);
         runtime.reset();
         stage = stageSpinupDelay;
     }

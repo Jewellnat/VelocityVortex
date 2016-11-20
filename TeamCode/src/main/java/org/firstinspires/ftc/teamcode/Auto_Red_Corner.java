@@ -32,28 +32,28 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
  * The names of OpModes appear on the menu of the FTC Driver Station.
  * When an selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
- * <p/>
+ * <p>
  * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
  * It includes all the skeletal structure that all iterative OpModes contain.
- * <p/>
+ * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-//@Autonomous(name = "Red Corner", group = "")  // @Autonomous(...) is the other common choice
+ //@Autonomous(name = "Red Corner", group = "")  // @Autonomous(...) is the other common choice
 @Disabled
 public class Auto_Red_Corner extends OpMode {
     /* Declare OpMode members. */
@@ -136,24 +136,24 @@ public class Auto_Red_Corner extends OpMode {
         if (stage == Settings.stageRedCorner2TurnLeft) {
             leftMotor.setPower(-1);
             rightMotor.setPower(1);
-            if (heading > Settings.RedTapeAngle) {
-                rightMotor.setPower(0);
-                leftMotor.setPower(0);
-                stageThreeStartPos = averageCM;
-                stage = Settings.stageRedCorner3LineFollow;
-            }
+             if (heading > Settings.RedTapeAngle){
+                 rightMotor.setPower(0);
+                 leftMotor.setPower(0);
+                 stageThreeStartPos = averageCM;
+                 stage =Settings.stageRedCorner3LineFollow;
+             }
         }
-        if (stage == Settings.stageRedCorner3LineFollow) {
-            if (lightAlpha > Settings.redTapeLightVal) {
-                leftMotor.setPower(.05);
+        if (stage == Settings.stageRedCorner3LineFollow){
+           if (lightAlpha > Settings.redTapeLightVal) {
+               leftMotor.setPower(.05);
                 rightMotor.setPower(1);
             } else {
                 leftMotor.setPower(1);
                 rightMotor.setPower(.05);
             }
-            if ((averageCM - stageThreeStartPos) < Settings.redTapeDistance) {
-                leftMotor.setPower(0);
-                rightMotor.setPower(0);
+            if ((averageCM - stageThreeStartPos)< Settings.redTapeDistance){
+               leftMotor.setPower(0);
+               rightMotor.setPower(0);
                 stage = Settings.stageRedCorner4AlignBucket;
             }
 
@@ -164,10 +164,10 @@ public class Auto_Red_Corner extends OpMode {
 
 
         }
-        if (stage == Settings.stageRedCorner4AlignBucket) {
+        if (stage == Settings.stageRedCorner4AlignBucket){
             leftMotor.setPower(-.5);
             rightMotor.setPower(.5);
-            if (heading > Settings.bucketAngle) {
+            if (heading > Settings.bucketAngle){
                 rightMotor.setPower(0);
                 leftMotor.setPower(0);
                 stage = 5;

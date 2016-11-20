@@ -33,10 +33,15 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Hardware;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -44,18 +49,17 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * The names of OpModes appear on the menu of the FTC Driver Station.
  * When an selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
- * <p/>
+ * <p>
  * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
  * It includes all the skeletal structure that all iterative OpModes contain.
- * <p/>
+ * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
 @Autonomous(name = "Corner", group = "")  // @Autonomous(...) is the other common choice
-
+@Disabled
 public class Corner extends OpMode {
-    int stage;
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftShootMotor = null;
@@ -63,10 +67,13 @@ public class Corner extends OpMode {
     private DcMotor leftDriveMotor = null;
     private DcMotor rightDriveMotor = null;
     private Servo shootTrigger = null;
-    // private GyroSensor gyroSensor;
+   // private GyroSensor gyroSensor;
     private DcMotor sweeperMotor = null;
-    // private ColorSensor colorSensor;
+   // private ColorSensor colorSensor;
     private Servo beaconServo = null;
+
+    int stage;
+
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -82,14 +89,14 @@ public class Corner extends OpMode {
         rightDriveMotor = hardwareMap.dcMotor.get("rightDriveMotor");
         leftDriveMotor.setDirection(DcMotor.Direction.REVERSE);
         leftShootMotor = hardwareMap.dcMotor.get("leftShootMotor");
-        rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
         leftShootMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightShootMotor = hardwareMap.dcMotor.get("rightShootMotor");
         leftShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rightShootMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         shootTrigger = hardwareMap.servo.get("trigger");
-        // gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
+       // gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
         sweeperMotor = hardwareMap.dcMotor.get("sweeperMotor");
-        // colorSensor = hardwareMap.colorSensor.get("colorSensor");
+       // colorSensor = hardwareMap.colorSensor.get("colorSensor");
         beaconServo = hardwareMap.servo.get("bacon");
     }
 
@@ -105,9 +112,9 @@ public class Corner extends OpMode {
      */
     @Override
     public void start() {
-        shootTrigger.setPosition(Settings.reset);
         runtime.reset();
         stage = Settings.stagecorner1shoot;
+        shootTrigger.setPosition(Settings.reset);
     }
 
 
@@ -154,11 +161,11 @@ public class Corner extends OpMode {
             double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
             double averagecm = (leftcm + rightcm) / 2;
             if (averagecm > Settings.cornerDriveDistance) {
-                stage = Settings.stage3turn180;
+                stage = Settings.stage3Stop;
 
             }
         }
-        if (stage == Settings.stage3turn180) {
+        if (stage == Settings.stage3Stop) {
             leftDriveMotor.setPower(0);
             rightDriveMotor.setPower(0);
         }

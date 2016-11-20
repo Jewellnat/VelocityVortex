@@ -32,14 +32,13 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.GyroSensor;
+
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -55,24 +54,24 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name = "The teleop", group = "")  // @Autonomous(...) is the other common choice
+@Autonomous(name = "Corner Shoot", group = "")  // @Autonomous(...) is the other common choice
 
-public class Tele_Op extends OpMode {
+public class CornerShoot extends OpMode {
     /* Declare OpMode members. */
+    Shoot doubleShooter = new Shoot();
     private ElapsedTime runtime = new ElapsedTime();
-
-
-    private DcMotor rightDriveMotor = null;
+    private DcMotor leftShootMotor = null;
+    private DcMotor rightShootMotor = null;
     private DcMotor leftDriveMotor = null;
+    private DcMotor rightDriveMotor = null;
+    private GyroSensor gyroSensor = null;
     private DcMotor sweeperMotor = null;
-    //private Servo shootTrigger;
-    private Servo beaconServo;
-    private boolean rightTriggerPressed;
-    private boolean BeaconServoLeft;
-    private boolean leftBummperPrevPressed;
-    private ColorSensor colorSensor;
-    private GyroSensor gyroSensor;
-    private Shooter ballShooter = new Shooter();
+    private Servo beaconServo = null;
+    //privste ColorSensor colorSensor = null;
+
+    int stage;
+
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -80,29 +79,22 @@ public class Tele_Op extends OpMode {
     public void init() {
         telemetry.addData("Status", "Initialized");
 
-        /* eg: Initialize the hardware variables. Note that the strings used here as parameters
-         * to 'get' must correspond to the names assigned during the robot configuration
-         * step (using the FTC Robot Controller app on the phone).
-         */
+
         leftDriveMotor = hardwareMap.dcMotor.get("leftDriveMotor");
         rightDriveMotor = hardwareMap.dcMotor.get("rightDriveMotor");
-
-
-        sweeperMotor = hardwareMap.dcMotor.get("sweeperMotor");
         leftDriveMotor.setDirection(DcMotor.Direction.REVERSE);
-        beaconServo = hardwareMap.servo.get("bacon");
-        //shootTrigger = hardwareMap.servo.get("trigger");
         gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
-        colorSensor = hardwareMap.colorSensor.get("colorSensor");
-        rightTriggerPressed = false;
-        ballShooter.hardwareMap = hardwareMap;
-        ballShooter.telemetry = telemetry;
-        ballShooter.init();
-        // eg: Set the drive motor directions:
-        // Reverse the motor that runs backwards when connected directly to the battery
-        // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        //  rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        // telemetry.addData("Status", "Initialized");
+        sweeperMotor = hardwareMap.dcMotor.get("sweeperMotor");
+        //colorSensor = hardwareMap.colorSensor.get("colorSensor");
+        beaconServo = hardwareMap.servo.get("bacon");
+        leftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        gyroSensor.calibrate();
+        doubleShooter.hardwareMap = hardwareMap;
+        doubleShooter.telemetry = telemetry;
+        doubleShooter.init();
     }
 
     /*
@@ -110,6 +102,8 @@ public class Tele_Op extends OpMode {
      */
     @Override
     public void init_loop() {
+
+
     }
 
     /*
@@ -117,62 +111,58 @@ public class Tele_Op extends OpMode {
      */
     @Override
     public void start() {
-        ballShooter.start();
+
         runtime.reset();
-        //shootTrigger.setPosition(Settings.reset);
+        stage = Settings.stageCornerShoot1Drive;
+        doubleShooter.start();
     }
+
 
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
+
     public void loop() {
 
-
-        ballShooter.loop();
-        //telemetry.addData("Status", shootTrigger.getPosition());
         telemetry.addData("Status", "Running: " + runtime.toString());
-        leftDriveMotor.setPower(-gamepad1.left_stick_y);
-        rightDriveMotor.setPower(-gamepad1.right_stick_y);
-        if (gamepad2.right_trigger == 1 && rightTriggerPressed == false) {
-            rightTriggerPressed = true;
+        telemetry.addData("Status", "encoderTicks left   " + leftDriveMotor.getCurrentPosition());
+        telemetry.addData("Status", "encoderTicks  right" +
+                "  " + rightDriveMotor.getCurrentPosition());
+        telemetry.addData("status", "gyroPosition " + gyroSensor.getHeading());
 
-        } else if (gamepad2.right_trigger == 1 && rightTriggerPressed == true) {
-            rightTriggerPressed = false;
+
+
+
+
+        if (stage == Settings.stageCornerShoot1Drive) {
+            leftDriveMotor.setPower(Settings.driveSpeed);
+            rightDriveMotor.setPower(Settings.driveSpeed);
+            double leftcm = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
+            double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
+            double averagecm = (leftcm + rightcm) / 2;
+            if (averagecm > Settings.cornerShootDriveDistence) {
+                stage = Settings.stageConerShoot2Shoot;
+                leftDriveMotor.setPower(0);
+                rightDriveMotor.setPower(0);
+            }
         }
-        if (rightTriggerPressed) {
-            ballShooter.setMotorRPM(Settings.shooterMotorRPM);
-            ballShooter.setMotorRPM(Settings.shooterMotorRPM);
-        } else {
-            ballShooter.setMotorRPM(0);
-
-        }
-        if (gamepad2.left_bumper && leftBummperPrevPressed == false) {
-            leftBummperPrevPressed = true;
-            BeaconServoLeft = !BeaconServoLeft;
-        } else if (!gamepad2.left_bumper && leftBummperPrevPressed == true) {
-            leftBummperPrevPressed = false;
-        }
-
-        if (BeaconServoLeft) {
-            beaconServo.setPosition(Settings.beaconRight);
-        } else {
-
-            beaconServo.setPosition(Settings.beaconLeft);
+        if (stage == Settings.stageConerShoot2Shoot) {
+            doubleShooter.loop();
         }
 
-        sweeperMotor.setPower(-gamepad2.left_stick_y);
-        if (gamepad2.right_bumper) {
-            ballShooter.shoot();
+
+
+
+
+        if (stage == Settings.stageConerShoot3Stop) {
+            leftDriveMotor.setPower(0);
+            rightDriveMotor.setPower(0);
+
         }
+
 
     }
 
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
-    @Override
-    public void stop() {
-    }
 
 }
