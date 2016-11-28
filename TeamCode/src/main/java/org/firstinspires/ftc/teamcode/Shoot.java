@@ -98,7 +98,7 @@ public class Shoot extends OpMode {
         ballShooter.loop();
 
         if (stage == stageSpinupDelay) {
-            if (runtime.time() > 5.0) {
+            if (runtime.time() > 3.0) {
                 stage = stageFirstShot;
             }
         }
@@ -113,7 +113,7 @@ public class Shoot extends OpMode {
 
         if (stage == stageResetDelay) {
             //This delay gives motors time to ramp back up
-            if (runtime.time() > 5.0) {
+            if (runtime.time() > 3.0) {
                 stage = stageSecondShot;
                 runtime.reset();
             }
@@ -129,7 +129,7 @@ public class Shoot extends OpMode {
 
         if (stage == stageSpinDownDelay) {
             //This delay makes sure ball is gone before shutting down shooter
-            if (runtime.time() > 2.0) {
+            if (runtime.time() > 1.0) {
                 stage = stageTurnOffShooters;
                 runtime.reset();
             }

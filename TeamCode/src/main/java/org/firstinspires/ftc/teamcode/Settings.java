@@ -58,6 +58,12 @@ public class Settings {
     public static int cornerShootDriveDistence = 16;
 
 
+    //Chassis settings
+    public static double chassis_KPLineFollow = .3;
+    public static double chassis_KPGyroStraight = 5;
+    public static int  chassis_GyroHeadingTol = 5;
+    public static int chassis_TurnMilliSeconds = 5000;
+
     public static double Tics2CM (int tics){
 
         return tics / TicsPerCM;
