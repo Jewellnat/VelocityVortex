@@ -138,7 +138,7 @@ public class RedCorner2Ramp extends OpMode {
         if (stage == stage_1DriveForward){
             if (robotChassis.isMoveComplete()){
                 //start Stage 2
-                stage = stage_2DobuleShot;
+                stage =stage_7Done;
                 doubleShooter.start();
             }
         }

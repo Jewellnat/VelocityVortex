@@ -12,6 +12,7 @@ public class SpeedController {
     private double tol = 250;
     private double lowerLimit = 0;
     private double upperLimit = 0;
+    private double motorPowerLast = 0;
     public SpeedController(double targetSpeedRPM) {
 
         this.targetSpeedRPM = targetSpeedRPM;
@@ -37,14 +38,15 @@ public class SpeedController {
 
         //If we are close try to stay there.
         if ((currentRPM > lowerLimit)  && (currentRPM <= targetSpeedRPM)){
-             retValue = targetSpeedRPM/Settings.shooterMotorMaxRPM;
+             retValue = motorPowerLast+(targetSpeedRPM - currentRPM)*Settings.shooter_Kp;
         }
-        else if ((currentRPM < upperLimit)  && (currentRPM > targetSpeedRPM)){
-             retValue = .3 * targetSpeedRPM/Settings.shooterMotorMaxRPM;
-        }
+
         else if (currentRPM <= lowerLimit) {
             retValue = 1.0;
         }
+
+
+        motorPowerLast = retValue;
         return retValue;
     }
 }
