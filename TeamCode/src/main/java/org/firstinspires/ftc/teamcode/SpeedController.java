@@ -8,11 +8,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class SpeedController {
     private double targetSpeedRPM;
-    private double  currentRPM = 0;
+    private double currentRPM = 0;
     private double tol = 250;
     private double lowerLimit = 0;
     private double upperLimit = 0;
     private double motorPowerLast = 0;
+
     public SpeedController(double targetSpeedRPM) {
 
         this.targetSpeedRPM = targetSpeedRPM;
@@ -31,22 +32,24 @@ public class SpeedController {
 
     public double getMotorPower(double deltaMilliSec, int deltaTicks) {
         //special case of 0  stop the motors
-        if (targetSpeedRPM  < 1) {return (0);}
-
-        double retValue = 0;
-        currentRPM = (deltaTicks/ deltaMilliSec * 60000 / Settings.shooterTicksPerRev);
-
-        //If we are close try to stay there.
-        if ((currentRPM > lowerLimit)  && (currentRPM <= targetSpeedRPM)){
-             retValue = motorPowerLast+(targetSpeedRPM - currentRPM)*Settings.shooter_Kp;
+        if (targetSpeedRPM < 1) {
+            motorPowerLast = 0;
+            return (0);
         }
 
-        else if (currentRPM <= lowerLimit) {
+        double retValue = 0;
+        currentRPM = (deltaTicks / deltaMilliSec * 60000 / Settings.shooterTicksPerRev);
+
+        //If we are close try to stay there.
+        if ((currentRPM > lowerLimit) && (currentRPM <= targetSpeedRPM)) {
+            retValue = motorPowerLast + (targetSpeedRPM - currentRPM) * Settings.shooter_Kp;
+            motorPowerLast = retValue;
+        } else if (currentRPM <= lowerLimit) {
             retValue = 1.0;
         }
 
-
-        motorPowerLast = retValue;
+        if (retValue > 1.0) {retValue = 1.0;}
+        if (retValue < 0) {retValue = 0;}
         return retValue;
     }
 }
