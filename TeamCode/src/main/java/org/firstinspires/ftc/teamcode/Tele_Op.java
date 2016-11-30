@@ -1,6 +1,6 @@
 /*
 
-   Copyright (c) 2016 Robert Atkinson
+Copyright (c) 2016 Robert Atkinson
 
 All rights reserved.
 
