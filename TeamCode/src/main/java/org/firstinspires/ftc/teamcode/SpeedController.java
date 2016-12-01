@@ -40,19 +40,17 @@ public class SpeedController {
         double retValue = 0;
         currentRPM = (deltaTicks / deltaMilliSec * 60000 / Settings.shooterTicksPerRev);
 
-
-	//Calcuate a desired motor power 
-	motorPowerLast = motorPowerLast + (targetSpeedRPM - currentRPM)*Settings.shooter_Kp;
+        //Calculate a desired motor power
+        motorPowerLast = motorPowerLast + (targetSpeedRPM - currentRPM) * Settings.shooter_Kp;
 
         //If we are not close try to get there.
+        if (currentRPM <= lowerLimit) {
+            retValue = 1.0;
+        }
 
-	if (currentRPM <= lowerLimit) {
-	    retValue = 1.0;
-	}
-
-	if (currentRPM >= upperLimit) {
-	    retValue = 0;
-	}
+        if (currentRPM >= upperLimit) {
+            retValue = 0;
+        }
 
         return retValue;
     }
