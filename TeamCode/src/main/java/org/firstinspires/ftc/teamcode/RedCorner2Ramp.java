@@ -125,7 +125,7 @@ public class RedCorner2Ramp extends OpMode {
 
     public void loop() {
 
-        telemetry.addData("Status", "Running: " + runtime.toString());
+        telemetry.addData("Status", "Running: " + stage);
 
         robotChassis.loop();
 

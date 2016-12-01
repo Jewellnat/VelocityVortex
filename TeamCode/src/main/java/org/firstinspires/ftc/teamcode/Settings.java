@@ -46,7 +46,7 @@ public class Settings {
     public static double spinnerShooterMiddle = .25;
     public static int shooterTicksPerRev = 28;
     public static int shooterMotorMaxRPM = 6000;
-    public static double shooterMotorRPM = 3990;
+    public static double shooterMotorRPM = 4900;
     public static double shooter_Kp = .01;
     public static double posTriggerTol = .0;
     public static int stage3turn180 = 3;
@@ -61,7 +61,7 @@ public class Settings {
 
     //Chassis settings
     public static double chassis_KPLineFollow = .3;
-    public static double chassis_KPGyroStraight = 5;
+    public static double chassis_KPGyroStraight = 0;
     public static int  chassis_GyroHeadingTol = 5;
     public static int chassis_TurnMilliSeconds = 5000;
 

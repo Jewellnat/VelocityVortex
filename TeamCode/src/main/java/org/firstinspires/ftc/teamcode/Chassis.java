@@ -67,11 +67,13 @@ public class Chassis extends OpMode {
     private int headingTarget = 0;           // while driving by gyro this is our target heading
     private double distance2TargetCM = 0;    // while driviing this is are destination distance
     private double lightSensorTarget = 0;    //while driving by line follow this is the target light sensor value
-
+    private double leftPower = 0;
+    private double rightPower = 0;
     private double storedCMTraveled = 0;     //for debugging store it for telemetry;
     private int storedGyroHeading = 0;    //for debugging store it for telemetry;
     private int gyroOffset = 0;               //gyro offset for driving backwards  will be 0 and 180
 
+    private double motorPowerCurrent = 0;
     /* Declare OpMode members. */
     private DcMotor leftDriveMotor = null;
     private DcMotor rightDriveMotor = null;
@@ -104,7 +106,7 @@ public class Chassis extends OpMode {
         gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
         gyroSensor.calibrate();
 
-        lightSensorLineFollow = hardwareMap.lightSensor.get("lightSensorLineFollow");
+        //lightSensorLineFollow = hardwareMap.lightSensor.get("lightSensorLineFollow");
 
     }
 
@@ -137,7 +139,8 @@ public class Chassis extends OpMode {
         telemetry.addData("Status", "Running: " + runtime.toString());
         telemetry.addData("Status", "GyroHeading " + storedGyroHeading);
         telemetry.addData("Status", "Distance " + storedCMTraveled);
-
+        telemetry.addData("Status", "motorPowerL " + leftPower);
+        telemetry.addData("Status", "motorPowerR " + rightPower);
         if (driveModeCurrent == driveModeLineFollow) {
             executeLineFollow();
         }
@@ -255,8 +258,8 @@ public class Chassis extends OpMode {
     private void executeDriveStraightByGyro() {
 
         double deltaHeading = headingTarget - getGyroHeading();
-        double leftPower = motorPowerTarget + (deltaHeading * Settings.chassis_KPGyroStraight);
-        double rightPower = motorPowerTarget - (deltaHeading * Settings.chassis_KPGyroStraight);
+         leftPower = motorPowerTarget + (deltaHeading * Settings.chassis_KPGyroStraight);
+         rightPower = motorPowerTarget - (deltaHeading * Settings.chassis_KPGyroStraight);
 
         if (leftPower < 0) {
             leftPower = 0;
@@ -271,7 +274,7 @@ public class Chassis extends OpMode {
         if (rightPower > 1) {
             rightPower = 1;
         }
-
+        motorPowerCurrent = leftPower;
         leftDriveMotor.setPower(leftPower);
         rightDriveMotor.setPower(rightPower);
 

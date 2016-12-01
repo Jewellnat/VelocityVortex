@@ -94,7 +94,7 @@ public class Tele_Op extends OpMode {
         beaconServo = hardwareMap.servo.get("bacon");
         //shootTrigger = hardwareMap.servo.get("trigger");
         gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
-        colorSensor = hardwareMap.colorSensor.get("colorSensor");
+        //colorSensor = hardwareMap.colorSensor.get("colorSensor");
         rightTriggerPressed = false;
         ballShooter.hardwareMap = hardwareMap;
         ballShooter.telemetry = telemetry;
@@ -175,5 +175,16 @@ public class Tele_Op extends OpMode {
     @Override
     public void stop() {
     }
+    public double joystickMath(double joyValue){
+        int sign = 1;
+        double retValue = 0;
+       if (joyValue < 0){
 
+           sign = -1;
+
+       }
+        retValue = Math.abs(joyValue * joyValue);
+
+     return retValue * sign;
+    }
 }
