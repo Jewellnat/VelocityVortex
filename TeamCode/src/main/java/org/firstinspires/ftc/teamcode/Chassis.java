@@ -67,7 +67,8 @@ public class Chassis extends OpMode {
     private int headingTarget = 0;           // while driving by gyro this is our target heading
     private double distance2TargetCM = 0;    // while driviing this is are destination distance
     private double lightSensorTarget = 0;    //while driving by line follow this is the target light sensor value
-
+    private double leftPower = 0;
+    private double rightPower = 0;
     private double storedCMTraveled = 0;     //for debugging store it for telemetry;
     private int storedGyroHeading = 0;    //for debugging store it for telemetry;
     private int gyroOffset = 0;               //gyro offset for driving backwards  will be 0 and 180
@@ -104,7 +105,7 @@ public class Chassis extends OpMode {
         gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
         gyroSensor.calibrate();
 
-        lightSensorLineFollow = hardwareMap.lightSensor.get("lightSensorLineFollow");
+        //lightSensorLineFollow = hardwareMap.lightSensor.get("lightSensorLineFollow");
 
     }
 
@@ -137,6 +138,9 @@ public class Chassis extends OpMode {
         telemetry.addData("Status", "Running: " + runtime.toString());
         telemetry.addData("Status", "GyroHeading " + storedGyroHeading);
         telemetry.addData("Status", "Distance " + storedCMTraveled);
+        telemetry.addData("Status", "motorPowerT " + motorPowerTarget);
+        telemetry.addData("Status", "motorPowerL " + leftPower);
+        telemetry.addData("Status", "motorPowerR " + rightPower);
 
         if (driveModeCurrent == driveModeLineFollow) {
             executeLineFollow();
@@ -170,10 +174,9 @@ public class Chassis extends OpMode {
         // reads encoders, converts to centimeters, and averages them.
         double leftCM = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
         double rightCM = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
-        storedCMTraveled = ((leftCM + rightCM) / 2);
+        storedCMTraveled = (Math.abs(leftCM) + Math.abs(rightCM)) / 2;
         return storedCMTraveled;
     }
-
 
     public void cmdDriveStraightByGyro(double motorPower, int heading, double distanceCM) {
 
@@ -205,7 +208,7 @@ public class Chassis extends OpMode {
         resetCounters();
     }
 
-    public void cmdSweeper(double motorPower){
+    public void cmdSweeper(double motorPower) {
         sweeperMotor.setPower(motorPower);
     }
 
@@ -224,8 +227,8 @@ public class Chassis extends OpMode {
 
         double deltaLight = lightSensorTarget - lightSensorLineFollow.getLightDetected();
 
-        double leftPower = motorPowerTarget + (deltaLight * Settings.chassis_KPLineFollow);
-        double rightPower = motorPowerTarget - (deltaLight * Settings.chassis_KPLineFollow);
+        leftPower = motorPowerTarget + (deltaLight * Settings.chassis_KPLineFollow);
+        rightPower = motorPowerTarget - (deltaLight * Settings.chassis_KPLineFollow);
 
         if (leftPower < 0) {
             leftPower = 0;
@@ -255,8 +258,8 @@ public class Chassis extends OpMode {
     private void executeDriveStraightByGyro() {
 
         double deltaHeading = headingTarget - getGyroHeading();
-        double leftPower = motorPowerTarget + (deltaHeading * Settings.chassis_KPGyroStraight);
-        double rightPower = motorPowerTarget - (deltaHeading * Settings.chassis_KPGyroStraight);
+        leftPower = motorPowerTarget + (deltaHeading * Settings.chassis_KPGyroStraight);
+        rightPower = motorPowerTarget - (deltaHeading * Settings.chassis_KPGyroStraight);
 
         if (leftPower < 0) {
             leftPower = 0;
@@ -271,7 +274,6 @@ public class Chassis extends OpMode {
         if (rightPower > 1) {
             rightPower = 1;
         }
-
         leftDriveMotor.setPower(leftPower);
         rightDriveMotor.setPower(rightPower);
 
@@ -282,7 +284,6 @@ public class Chassis extends OpMode {
             rightDriveMotor.setPower(0);
         }
     }
-
 
 
     private void executeTurnByGyro() {
@@ -335,7 +336,7 @@ public class Chassis extends OpMode {
             retValue = retValue - 360;
         }
 
-        storedGyroHeading =  (int) retValue + gyroOffset;
+        storedGyroHeading = (int) retValue + gyroOffset;
         return storedGyroHeading;
     }
 }

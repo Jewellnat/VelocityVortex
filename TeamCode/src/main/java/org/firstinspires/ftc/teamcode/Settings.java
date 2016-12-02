@@ -21,7 +21,7 @@ public class Settings {
     public static int cornerDriveDistance = 155;
     public static int middleDriveDistance = 130;
     public static int redTapeLightVal = 99;
-    public static double GearRatio = 1 / 1; //motor revoulutions /wheel revoulutions
+    public static double GearRatio = 1 / 1.5; //motor revoulutions /wheel revoulutions
     public final static int ticsPerRevoulution = 1440;
     public final static double wheelCircumfence = 8*Math.PI; //wheel diameter * PI
     public static double TicsPerCM = (GearRatio *ticsPerRevoulution)/wheelCircumfence;
@@ -46,7 +46,8 @@ public class Settings {
     public static double spinnerShooterMiddle = .25;
     public static int shooterTicksPerRev = 28;
     public static int shooterMotorMaxRPM = 6000;
-    public static double shooterMotorRPM = 3990;
+    public static double shooterMotorRPM = 4900;
+    public static double shooter_Kp = .01;
     public static double posTriggerTol = .0;
     public static int stage3turn180 = 3;
     public static int stage4backup = 4;
@@ -60,7 +61,7 @@ public class Settings {
 
     //Chassis settings
     public static double chassis_KPLineFollow = .3;
-    public static double chassis_KPGyroStraight = 5;
+    public static double chassis_KPGyroStraight = .003;
     public static int  chassis_GyroHeadingTol = 5;
     public static int chassis_TurnMilliSeconds = 5000;
 

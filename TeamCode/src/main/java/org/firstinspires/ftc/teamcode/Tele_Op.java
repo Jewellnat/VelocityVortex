@@ -1,4 +1,5 @@
 /*
+
 Copyright (c) 2016 Robert Atkinson
 
 All rights reserved.
@@ -73,6 +74,7 @@ public class Tele_Op extends OpMode {
     private ColorSensor colorSensor;
     private GyroSensor gyroSensor;
     private Shooter ballShooter = new Shooter();
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -93,7 +95,7 @@ public class Tele_Op extends OpMode {
         beaconServo = hardwareMap.servo.get("bacon");
         //shootTrigger = hardwareMap.servo.get("trigger");
         gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
-        colorSensor = hardwareMap.colorSensor.get("colorSensor");
+        //colorSensor = hardwareMap.colorSensor.get("colorSensor");
         rightTriggerPressed = false;
         ballShooter.hardwareMap = hardwareMap;
         ballShooter.telemetry = telemetry;
@@ -132,8 +134,8 @@ public class Tele_Op extends OpMode {
         ballShooter.loop();
         //telemetry.addData("Status", shootTrigger.getPosition());
         telemetry.addData("Status", "Running: " + runtime.toString());
-        leftDriveMotor.setPower(-gamepad1.left_stick_y);
-        rightDriveMotor.setPower(-gamepad1.right_stick_y);
+        leftDriveMotor.setPower(joystickMath(-gamepad1.left_stick_y));
+        rightDriveMotor.setPower(joystickMath(-gamepad1.right_stick_y));
         if (gamepad2.right_trigger == 1 && rightTriggerPressed == false) {
             rightTriggerPressed = true;
 
@@ -175,4 +177,13 @@ public class Tele_Op extends OpMode {
     public void stop() {
     }
 
+    public double joystickMath(double joyValue) {
+        int sign = 1;
+        double retValue = 0;
+        if (joyValue < 0) {
+            sign = -1;
+        }
+        return  Math.abs(Math.pow(joyValue, 2) ) * sign;
+
+    }
 }
