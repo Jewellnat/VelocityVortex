@@ -44,6 +44,7 @@ import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -70,6 +71,7 @@ public class Charlie_Prototype extends OpMode {
     private ColorSensor ColorSensor = null;
     private GyroSensor gyro = null;
     private MRI_RangeFinder far = null;
+    private Servo beaconServo = null;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -88,6 +90,7 @@ public class Charlie_Prototype extends OpMode {
         ColorSensor = hardwareMap.colorSensor.get("colorSensor");
         gyro = hardwareMap.gyroSensor.get("gyroSensor");
         far = new MRI_RangeFinder(hardwareMap.i2cDevice.get("far"));
+        beaconServo = hardwareMap.servo.get("bacon");
         gyro.calibrate();
         // eg: Set the  ve motor directions:
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -133,7 +136,7 @@ public class Charlie_Prototype extends OpMode {
         if (state == 2) {
 
             int gyroValue = gyro.getHeading();
-            if (gyroValue < 70) {
+            if (gyroValue < 45) {
                 leftMotor.setPower(.5);
                 rightMotor.setPower(-.5);
             } else {
@@ -145,34 +148,120 @@ public class Charlie_Prototype extends OpMode {
         if (state == 3) {
             if (distance > 15) {
 
+                leftMotor.setPower(.5);
+                rightMotor.setPower(.5);
+            } else {
+                leftMotor.setPower(0);
+                rightMotor.setPower(0);
+                state = 4;
+            }
+        }
+        if (state == 4) {
+            if (lightAlpha < 50) {
+
+
+                if (distance > 5) {
+
+                    leftMotor.setPower(1);
+                    rightMotor.setPower(1);
+                } else {
+                    leftMotor.setPower(0);
+                    rightMotor.setPower(0);
+                    state = 5;
+                }
+            }else  {
+                        beaconServo.setPosition(Settings.beaconRight);
+                if (distance > 5) {
+                    leftMotor.setPower(1);
+                    rightMotor.setPower(1);
+                } else {
+                    leftMotor.setPower(0);
+                    rightMotor.setPower(0);
+                    state = 5;
+                    }
+        }
+
+            if (state == 5)
+            if (distance < 15) {
+                leftMotor.setPower(-1);
+                rightMotor.setPower(-1);
+            } else {
+                leftMotor.setPower(0);
+                rightMotor.setPower(0);
+                state = 6;
+            }
+        int gyroValue = gyro.getHeading();;
+        if (state == 6) {
+            if (gyroValue < 160) {
+
+                leftMotor.setPower(.5);
+                rightMotor.setPower(-.5);
+            } else {
+                leftMotor.setPower(0);
+                rightMotor.setPower(0);
+                state = 7;
+            }
+        }
+
+        if (state == 7) {
+            leftMotor.setPower(1);
+            rightMotor.setPower(1);
+
+            if (lightAlpha < 85) {
+                state = 8;
+            }
+        }
+        if (state == 8) {
+
+            int gyroValue = gyro.getHeading();
+            if (gyroValue < 70) {
+                leftMotor.setPower(.5);
+                rightMotor.setPower(-.5);
+            } else {
+                leftMotor.setPower(0);
+                rightMotor.setPower(0);
+                state = 9;
+            }
+        }
+        if (state == 9) {
+            if (distance > 15) {
+
                 leftMotor.setPower(1);
                 rightMotor.setPower(1);
             } else {
                 leftMotor.setPower(0);
                 rightMotor.setPower(0);
+                state = 10;
             }
         }
+        if (state == 10) {
             if (lightAlpha < 50) {
                 if (distance > 5) {
 
                     leftMotor.setPower(1);
                     rightMotor.setPower(1);
-                }else{
-                  leftMotor.setPower(0);
-                  rightMotor.setPower(0);
+                } else {
+                    leftMotor.setPower(0);
+                    rightMotor.setPower(0);
+                    state = 11;
                 }
             }
+        }
+        if (state == 12) {
             if (lightAlpha > 50) {
 
-                }
-//            if (lightAlpha > 13) {
-//                leftMotor.setPower(.05);
-//                rightMotor.setPower(1);
-//            } else {
-//                leftMotor.setPower(1);
-//                rightMotor.setPower(.05);
-//            }
-//        }
+            }
+            if (distance < 15) {
+                leftMotor.setPower(-1);
+                rightMotor.setPower(-1);
+            } else {
+                leftMotor.setPower(0);
+                rightMotor.setPower(0);
+                state = 13;
+            }
+        }
+
+//
 
 
 //        telemetry.addData("Status", "Running: " + runtime.toString());
@@ -195,10 +284,12 @@ public class Charlie_Prototype extends OpMode {
 //        } else {
 //            leftMotor.setPower(0);
 //            rightMotor.setPower(0);
-            }
+        }
     /*
      * Code to run ONCE after the driver hits STOP
      */
 
 
-        }
+    }
+
+
