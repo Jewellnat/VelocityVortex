@@ -258,8 +258,8 @@ public class Chassis extends OpMode {
     private void executeDriveStraightByGyro() {
 
         double deltaHeading = headingTarget - getGyroHeading();
-        leftPower = motorPowerTarget + (deltaHeading * Settings.chassis_KPGyroStraight);
-        rightPower = motorPowerTarget - (deltaHeading * Settings.chassis_KPGyroStraight);
+        leftPower = motorPowerTarget; //+ (deltaHeading * Settings.chassis_KPGyroStraight);
+        rightPower = motorPowerTarget; //- (deltaHeading * Settings.chassis_KPGyroStraight);
 
         if (leftPower < 0) {
             leftPower = 0;
