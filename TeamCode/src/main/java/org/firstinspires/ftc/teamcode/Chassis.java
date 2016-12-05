@@ -141,6 +141,7 @@ public class Chassis extends OpMode {
         telemetry.addData("Status", "motorPowerT " + motorPowerTarget);
         telemetry.addData("Status", "motorPowerL " + leftPower);
         telemetry.addData("Status", "motorPowerR " + rightPower);
+        telemetry.addData("Status", "DriveMode " + driveModeCurrent);
 
         if (driveModeCurrent == driveModeLineFollow) {
             executeLineFollow();
@@ -166,8 +167,8 @@ public class Chassis extends OpMode {
         rightDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         moveIsComplete = false;
         driveModeCurrent = driveModeStopped;
-        leftDriveMotor.setPower(0);
-        rightDriveMotor.setPower(0);
+        //leftDriveMotor.setPower(0);
+       // rightDriveMotor.setPower(0);
     }
 
     public double getCMTraveled() {
@@ -181,31 +182,35 @@ public class Chassis extends OpMode {
     public void cmdDriveStraightByGyro(double motorPower, int heading, double distanceCM) {
 
         //drive by straight by using the gyro
+        resetCounters();
         driveModeCurrent = driveModeStraightByGyro;
         motorPowerTarget = motorPower;
         headingTarget = heading;
         distance2TargetCM = distanceCM;
-        resetCounters();
+
     }
 
 
-    public void cmdTurnByGyro(double motorPower, int heading) {
+    public void cmdTurnByGyro(double motorPowerLeft, double motorPowerRight, int heading) {
         //drive by straight by using the gyro
+        resetCounters();
         driveModeCurrent = driveModeTurnByGyro;
-        motorPowerTarget = motorPower;
+        //motorPowerTarget = motorPower;
         headingTarget = heading;
         distance2TargetCM = 0;
-        resetCounters();
+        leftDriveMotor.setPower (motorPowerLeft);
+        rightDriveMotor.setPower(motorPowerRight);
         runtime.reset();
     }
 
     public void cmdDriveByLineFollow(double motorPower, int lightSensorValue, double distanceCM) {
+        resetCounters();
         driveModeCurrent = driveModeLineFollow;
         motorPowerTarget = motorPower;
         headingTarget = 0;
         lightSensorTarget = lightSensorValue;
         distance2TargetCM = distanceCM;
-        resetCounters();
+
     }
 
     public void cmdSweeper(double motorPower) {
@@ -328,15 +333,23 @@ public class Chassis extends OpMode {
 
     public int getGyroHeading() {
 
-        double retValue = gyroSensor.getHeading();
-        //First take out full rotations
-        retValue = (retValue % 360) * 360;
-
-        if ((retValue > 180) && (retValue < 360)) {
-            retValue = retValue - 360;
-        }
-
-        storedGyroHeading = (int) retValue + gyroOffset;
+        storedGyroHeading = (int) normalizeGyro(gyroSensor.getHeading()) ;
         return storedGyroHeading;
     }
+
+    private double normalizeGyro ( double gyroReading ){
+        //
+        double retValue = (gyroOffset + gyroReading) % 360;
+
+        if ((retValue > 180 && retValue < 360)){
+            retValue = retValue -360;
+        }
+
+        if ((retValue < -180 && retValue > -360)){
+            retValue = retValue + 360;
+        }
+
+        return retValue;
+    }
+
 }

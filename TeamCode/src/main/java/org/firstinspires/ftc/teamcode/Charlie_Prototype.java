@@ -60,8 +60,8 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
- //@Autonomous(name = "Prototype", group = "")  // @Autonomous(...) is the other common choice
-    @Disabled
+//@Autonomous(name = "Prototype", group = "")  // @Autonomous(...) is the other common choice
+@Disabled
 public class Charlie_Prototype extends OpMode {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -169,8 +169,8 @@ public class Charlie_Prototype extends OpMode {
                     rightMotor.setPower(0);
                     state = 5;
                 }
-            }else  {
-                        beaconServo.setPosition(Settings.beaconRight);
+            } else {
+                beaconServo.setPosition(Settings.beaconRight);
                 if (distance > 5) {
                     leftMotor.setPower(1);
                     rightMotor.setPower(1);
@@ -178,88 +178,89 @@ public class Charlie_Prototype extends OpMode {
                     leftMotor.setPower(0);
                     rightMotor.setPower(0);
                     state = 5;
-                    }
-        }
+                }
+            }
 
             if (state == 5)
-            if (distance < 15) {
-                leftMotor.setPower(-1);
-                rightMotor.setPower(-1);
-            } else {
-                leftMotor.setPower(0);
-                rightMotor.setPower(0);
-                state = 6;
-            }
-        int gyroValue = gyro.getHeading();;
-        if (state == 6) {
-            if (gyroValue < 160) {
-
-                leftMotor.setPower(.5);
-                rightMotor.setPower(-.5);
-            } else {
-                leftMotor.setPower(0);
-                rightMotor.setPower(0);
-                state = 7;
-            }
-        }
-
-        if (state == 7) {
-            leftMotor.setPower(1);
-            rightMotor.setPower(1);
-
-            if (lightAlpha < 85) {
-                state = 8;
-            }
-        }
-        if (state == 8) {
-
+                if (distance < 15) {
+                    leftMotor.setPower(-1);
+                    rightMotor.setPower(-1);
+                } else {
+                    leftMotor.setPower(0);
+                    rightMotor.setPower(0);
+                    state = 6;
+                }
             int gyroValue = gyro.getHeading();
-            if (gyroValue < 70) {
-                leftMotor.setPower(.5);
-                rightMotor.setPower(-.5);
-            } else {
-                leftMotor.setPower(0);
-                rightMotor.setPower(0);
-                state = 9;
-            }
-        }
-        if (state == 9) {
-            if (distance > 15) {
+            ;
+            if (state == 6) {
+                if (gyroValue < 160) {
 
+                    leftMotor.setPower(.5);
+                    rightMotor.setPower(-.5);
+                } else {
+                    leftMotor.setPower(0);
+                    rightMotor.setPower(0);
+                    state = 7;
+                }
+            }
+
+            if (state == 7) {
                 leftMotor.setPower(1);
                 rightMotor.setPower(1);
-            } else {
-                leftMotor.setPower(0);
-                rightMotor.setPower(0);
-                state = 10;
+
+                if (lightAlpha < 85) {
+                    state = 8;
+                }
             }
-        }
-        if (state == 10) {
-            if (lightAlpha < 50) {
-                if (distance > 5) {
+            if (state == 8) {
+
+                 gyroValue = gyro.getHeading();
+                if (gyroValue < 70) {
+                    leftMotor.setPower(.5);
+                    rightMotor.setPower(-.5);
+                } else {
+                    leftMotor.setPower(0);
+                    rightMotor.setPower(0);
+                    state = 9;
+                }
+            }
+            if (state == 9) {
+                if (distance > 15) {
 
                     leftMotor.setPower(1);
                     rightMotor.setPower(1);
                 } else {
                     leftMotor.setPower(0);
                     rightMotor.setPower(0);
-                    state = 11;
+                    state = 10;
                 }
             }
-        }
-        if (state == 12) {
-            if (lightAlpha > 50) {
+            if (state == 10) {
+                if (lightAlpha < 50) {
+                    if (distance > 5) {
 
+                        leftMotor.setPower(1);
+                        rightMotor.setPower(1);
+                    } else {
+                        leftMotor.setPower(0);
+                        rightMotor.setPower(0);
+                        state = 11;
+                    }
+                }
             }
-            if (distance < 15) {
-                leftMotor.setPower(-1);
-                rightMotor.setPower(-1);
-            } else {
-                leftMotor.setPower(0);
-                rightMotor.setPower(0);
-                state = 13;
+            if (state == 12) {
+                if (lightAlpha > 50) {
+
+                }
+                if (distance < 15) {
+                    leftMotor.setPower(-1);
+                    rightMotor.setPower(-1);
+                } else {
+                    leftMotor.setPower(0);
+                    rightMotor.setPower(0);
+                    state = 13;
+                }
             }
-        }
 
 //
 
@@ -291,5 +292,6 @@ public class Charlie_Prototype extends OpMode {
 
 
     }
+}
 
 

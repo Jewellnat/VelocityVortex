@@ -138,7 +138,7 @@ public class RedCorner2Ramp extends OpMode {
         if (stage == stage_1DriveForward){
             if (robotChassis.isMoveComplete()){
                 //start Stage 2
-                stage =stage_7Done;
+                stage =stage_2DobuleShot;
                 doubleShooter.start();
             }
         }
@@ -148,7 +148,7 @@ public class RedCorner2Ramp extends OpMode {
             if (doubleShooter.isDone()){
                 //start Stage 3
                 stage = stage_3TurnLeft;
-                robotChassis.cmdTurnByGyro(.25,-45);
+                robotChassis.cmdTurnByGyro(-Settings.chassis_TurnMotorPower, Settings.chassis_TurnMotorPower,-45);
             }
         }
 
@@ -167,7 +167,7 @@ public class RedCorner2Ramp extends OpMode {
             if (robotChassis.isMoveComplete()){
                 //start Stage 5
                 stage = stage_5TurnLeftAgain;
-                robotChassis.cmdTurnByGyro(.4, -90);
+                robotChassis.cmdTurnByGyro(-Settings.chassis_TurnMotorPower, Settings.chassis_TurnMotorPower, -90);
             }
         }
 

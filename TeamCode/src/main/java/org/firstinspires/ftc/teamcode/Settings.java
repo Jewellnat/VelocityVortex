@@ -64,6 +64,7 @@ public class Settings {
     public static double chassis_KPGyroStraight = .003;
     public static int  chassis_GyroHeadingTol = 5;
     public static int chassis_TurnMilliSeconds = 5000;
+    public static double chassis_TurnMotorPower = .4;
 
     public static double Tics2CM (int tics){
 
