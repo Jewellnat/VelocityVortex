@@ -47,7 +47,7 @@ public class Settings {
     public static int shooterTicksPerRev = 28;
     public static int shooterMotorMaxRPM = 6000;
     public static double shooterMotorRPM = 4200;
-    public static double shooter_Kp = .09;
+    public static double shooter_Kp = .00009;
     public static double posTriggerTol = .0;
     public static int stage3turn180 = 3;
     public static int stage4backup = 4;
