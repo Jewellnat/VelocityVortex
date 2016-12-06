@@ -38,6 +38,9 @@ public class Shooter extends OpMode {
 
     private SpeedController shotspeedRightControler = null;
     private SpeedController shotspeedLeftControler = null;
+    double rightMotorAdjustment = 0;
+    //calculate left motor adjustment
+    double leftMotorAdjustment = 0;
 
     public void init() {
 
@@ -72,7 +75,10 @@ public class Shooter extends OpMode {
         return (int) (shotspeedLeftControler.getMeasuredRPM() +
                 shotspeedRightControler.getMeasuredRPM()) / 2;
     }
-
+    public double getMotorPower() {
+        //return the measured motor speed
+        return (rightMotorAdjustment + leftMotorAdjustment)/ 2;
+    }
     /*public void setMotorPower(double ShootMotorPower) {
         //set the shooter motor RPM
 
@@ -166,9 +172,9 @@ public class Shooter extends OpMode {
         rightShooterPrevPos = rightShooterCurrPos;
         leftShooterPrevPos = leftShooterCurrPos;
 
-        double rightMotorAdjustment = shotspeedRightControler.getMotorPower(deltaTime, rightShooterDeltaPos);
+        rightMotorAdjustment = shotspeedRightControler.getMotorPower(deltaTime, rightShooterDeltaPos);
         //calculate left motor adjustment
-        double leftMotorAdjustment = shotspeedLeftControler.getMotorPower(deltaTime, leftShooterDeltaPos);
+        leftMotorAdjustment = shotspeedLeftControler.getMotorPower(deltaTime, leftShooterDeltaPos);
 
         //act on right motor adjustment
         rightShootMotor.setPower(rightMotorAdjustment);

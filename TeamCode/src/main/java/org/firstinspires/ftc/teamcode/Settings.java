@@ -32,7 +32,7 @@ public class Settings {
     public static int secondLaunch = 7;
     public static int secondReset = 8;
     public static int turnOffShooter = 9;
-    public static double launch = .6;
+    public static double launch = .4;
     public static double reset = 0;
     public static double shooterSpeedTeleOP = .4;
     public static double spinnerShooterAuto = .3;
@@ -46,8 +46,8 @@ public class Settings {
     public static double spinnerShooterMiddle = .25;
     public static int shooterTicksPerRev = 28;
     public static int shooterMotorMaxRPM = 6000;
-    public static double shooterMotorRPM = 4900;
-    public static double shooter_Kp = .01;
+    public static double shooterMotorRPM = 4200;
+    public static double shooter_Kp = .09;
     public static double posTriggerTol = .0;
     public static int stage3turn180 = 3;
     public static int stage4backup = 4;
@@ -62,9 +62,9 @@ public class Settings {
     //Chassis settings
     public static double chassis_KPLineFollow = .3;
     public static double chassis_KPGyroStraight = .003;
-    public static int  chassis_GyroHeadingTol = 5;
+    public static int  chassis_GyroHeadingTol = 7;
     public static int chassis_TurnMilliSeconds = 5000;
-    public static double chassis_TurnMotorPower = .4;
+    public static double chassis_TurnMotorPower = .3;
 
     public static double Tics2CM (int tics){
 

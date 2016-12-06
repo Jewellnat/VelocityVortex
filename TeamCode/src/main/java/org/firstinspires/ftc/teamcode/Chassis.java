@@ -35,6 +35,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -293,12 +294,10 @@ public class Chassis extends OpMode {
 
     private void executeTurnByGyro() {
 
-        int loHeading = headingTarget - Settings.chassis_GyroHeadingTol;
-        int hiHeading = headingTarget + Settings.chassis_GyroHeadingTol;
-        int currHeading = getGyroHeading();
+        int deltaHeading = Math.abs(getGyroHeading() - headingTarget);
 
-        if ((currHeading > loHeading) && (currHeading < hiHeading) ||
-                runtime.milliseconds() > Settings.chassis_TurnMilliSeconds) {
+        if ((deltaHeading <= Settings.chassis_GyroHeadingTol) ||
+            runtime.milliseconds() > Settings.chassis_TurnMilliSeconds) {
             //We are there stop
             moveIsComplete = true;
             driveModeCurrent = driveModeStopped;
@@ -310,18 +309,18 @@ public class Chassis extends OpMode {
     public void setSweeperFront() {
 
         //Sets the drive mode to Sweeper first
-        leftDriveMotor.setDirection(DcMotor.Direction.FORWARD);
-        rightDriveMotor.setDirection(DcMotor.Direction.REVERSE);
-        setGyroOffset(0);
+        leftDriveMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightDriveMotor.setDirection(DcMotor.Direction.FORWARD);
+        setGyroOffset(180);
 
     }
 
     public void setShooterFront() {
 
         //sets the drive mode to shooter first
-        leftDriveMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightDriveMotor.setDirection(DcMotor.Direction.FORWARD);
-        setGyroOffset(180);
+        leftDriveMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightDriveMotor.setDirection(DcMotor.Direction.REVERSE);
+        setGyroOffset(0);
 
     }
 

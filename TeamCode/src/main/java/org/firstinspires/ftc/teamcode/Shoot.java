@@ -95,6 +95,8 @@ public class Shoot extends OpMode {
     public void loop() {
 
         telemetry.addData("Status", "Running, ShooterRPM=" + ballShooter.getMotorRPM());
+        telemetry.addData("Status", "Running, motorPower=" + ballShooter.getMotorPower());
+
         ballShooter.loop();
 
         if (stage == stageSpinupDelay) {
