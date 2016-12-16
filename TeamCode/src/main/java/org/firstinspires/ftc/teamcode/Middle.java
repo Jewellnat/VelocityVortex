@@ -146,15 +146,15 @@ public class Middle extends OpMode {
             if (runtime.seconds() > Settings.turnOffShooter) {
                 leftShootMotor.setPower(0);
                 rightShootMotor.setPower(0);
-                leftDriveMotor.setPower(Settings.driveSpeed);
-                rightDriveMotor.setPower(Settings.driveSpeed);
+                leftDriveMotor.setPower(Settings.driveSpeedL);
+                rightDriveMotor.setPower(Settings.driveSpeedR);
                 stage = Settings.stage2Charge;
 
             }
         }
         if (stage == Settings.stage2Charge) {
-            leftDriveMotor.setPower(Settings.driveSpeed);
-            rightDriveMotor.setPower(Settings.driveSpeed);
+            leftDriveMotor.setPower(Settings.driveSpeedL);
+            rightDriveMotor.setPower(Settings.driveSpeedR);
             double leftcm = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
             double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
             double averagecm = (leftcm + rightcm) / 2;

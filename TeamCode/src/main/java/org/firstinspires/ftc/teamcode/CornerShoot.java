@@ -136,12 +136,12 @@ public class CornerShoot extends OpMode {
 
 
         if (stage == Settings.stageCornerShoot1Drive) {
-            leftDriveMotor.setPower(Settings.driveSpeed);
-            rightDriveMotor.setPower(Settings.driveSpeed);
+            leftDriveMotor.setPower(Settings.driveSpeedL);
+            rightDriveMotor.setPower(Settings.driveSpeedR);
             double leftcm = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
             double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
             double averagecm = (leftcm + rightcm) / 2;
-            if (averagecm > Settings.cornerShootDriveDistence) {
+            if (Math.abs(averagecm) > Settings.cornerShootDriveDistence) {
                 stage = Settings.stageConerShoot2Shoot;
                 leftDriveMotor.setPower(0);
                 rightDriveMotor.setPower(0);

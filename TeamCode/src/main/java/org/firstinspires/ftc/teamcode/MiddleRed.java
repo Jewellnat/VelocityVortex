@@ -91,6 +91,8 @@ public class MiddleRed extends OpMode {
         rightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
         gyroSensor.calibrate();
         doubleShooter.hardwareMap = hardwareMap;
         doubleShooter.telemetry = telemetry;
@@ -140,21 +142,21 @@ public class MiddleRed extends OpMode {
             }
         }
         if (stage == Settings.stage2Charge) {
-            leftDriveMotor.setPower(Settings.driveSpeed);
-            rightDriveMotor.setPower(Settings.driveSpeed);
+            leftDriveMotor.setPower(Settings.driveSpeedL);
+            rightDriveMotor.setPower(Settings.driveSpeedR);
             double leftcm = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
             double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
             double averagecm = (leftcm + rightcm) / 2;
-            if (averagecm > Settings.middleDriveDistance) {
+            if (Math.abs(averagecm) > Settings.middleDriveDistance) {
                 stage = Settings.stage3turn180;
 
             }
         }
         if (stage == Settings.stage3turn180){
-            leftDriveMotor.setPower(-Settings.driveSpeed);
-            rightDriveMotor.setPower(Settings.driveSpeed);
+            leftDriveMotor.setPower(-Settings.driveSpeedL);
+            rightDriveMotor.setPower(Settings.driveSpeedR);
             int gyroHeading = gyroSensor.getHeading();
-           if (gyroHeading < 190 && gyroHeading > 90 ){
+           if (gyroHeading < 210 && gyroHeading > 110 ){
                leftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                rightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                leftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -163,12 +165,12 @@ public class MiddleRed extends OpMode {
            }
         }
         if (stage == Settings.stage4backup){
-            leftDriveMotor.setPower(-Settings.driveSpeed);
-            rightDriveMotor.setPower(-Settings.driveSpeed);
+            leftDriveMotor.setPower(-Settings.driveSpeedL);
+            rightDriveMotor.setPower(-Settings.driveSpeedR);
             double leftcm = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
             double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
             double averagecm = (leftcm + rightcm) / 2;
-            if (averagecm < Settings.middleBackupDriveDistance) {
+            if (Math.abs(averagecm) > Math.abs(Settings.middleBackupDriveDistance)) {
                 stage = Settings.stage5stop;
 
             }

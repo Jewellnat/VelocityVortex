@@ -49,7 +49,9 @@ public class Shoot extends OpMode {
     public static int stageFirstShot = 1;
     public static int stageResetDelay = 2;
     public static int stageSecondShot = 3;
+    public static int stage2ResetDelay = 6;
     public static int stageSpinDownDelay = 4;
+    public static int stageThreeShot = 7;
     public static int stageTurnOffShooters = 5;
 
     private boolean done = false;
@@ -100,7 +102,7 @@ public class Shoot extends OpMode {
         ballShooter.loop();
 
         if (stage == stageSpinupDelay) {
-            if (runtime.time() > 3.0) {
+            if (runtime.time() > 2.0) {
                 stage = stageFirstShot;
             }
         }
@@ -115,13 +117,27 @@ public class Shoot extends OpMode {
 
         if (stage == stageResetDelay) {
             //This delay gives motors time to ramp back up
-            if (runtime.time() > 3.0) {
+            if (runtime.time() > 2.0) {
                 stage = stageSecondShot;
                 runtime.reset();
             }
         }
 
         if (stage == stageSecondShot) {
+            if (ballShooter.isTriggerReset()) {
+                ballShooter.shoot();
+                stage = stage2ResetDelay ;
+                runtime.reset();
+            }
+        }
+        if (stage == stage2ResetDelay) {
+            //This delay gives motors time to ramp back up
+            if (runtime.time() > 2.0) {
+                stage =stageThreeShot ;
+                runtime.reset();
+            }
+        }
+        if (stage == stageThreeShot) {
             if (ballShooter.isTriggerReset()) {
                 ballShooter.shoot();
                 stage = stageSpinDownDelay;

@@ -59,6 +59,7 @@ public class Chassis extends OpMode {
     public static int driveModeStraightByGyro = 1;
     public static int driveModeTurnByGyro = 2;
     public static int driveModeLineFollow = 3;
+    public static int driveModeTurnByEncoders = 4;
 
     private int driveModeCurrent = driveModeStopped;   //one of the above modes  use in loop
 
@@ -138,11 +139,12 @@ public class Chassis extends OpMode {
 
         telemetry.addData("Status", "Running: " + runtime.toString());
         telemetry.addData("Status", "GyroHeading " + storedGyroHeading);
+        telemetry.addData("Status", "headingTarget " + headingTarget);
         telemetry.addData("Status", "Distance " + storedCMTraveled);
-        telemetry.addData("Status", "motorPowerT " + motorPowerTarget);
-        telemetry.addData("Status", "motorPowerL " + leftPower);
-        telemetry.addData("Status", "motorPowerR " + rightPower);
-        telemetry.addData("Status", "DriveMode " + driveModeCurrent);
+    //    telemetry.addData("Status", "motorPowerT " + motorPowerTarget);
+     //   telemetry.addData("Status", "motorPowerL " + leftPower);
+     //   telemetry.addData("Status", "motorPowerR " + rightPower);
+      //  telemetry.addData("Status", "DriveMode " + driveModeCurrent);
 
         if (driveModeCurrent == driveModeLineFollow) {
             executeLineFollow();
@@ -157,7 +159,10 @@ public class Chassis extends OpMode {
             //Drive straight by the using the Gyro
             executeDriveStraightByGyro();
         }
-
+        if (driveModeCurrent == driveModeTurnByEncoders) {
+            //Drive straight by the using the Gyro
+            executeTurnByEncoder();
+        }
     }
 
     private void resetCounters() {
@@ -350,5 +355,35 @@ public class Chassis extends OpMode {
 
         return retValue;
     }
+
+    public void cmdTurnByEncoder (double leftMotorPower, double rightMotorPower, int degrees) {
+        //turn using the given motor powers...
+        //WARNING : They must have the same magnitude and opposite signs
+        // AKA NO swing turns
+
+        resetCounters();
+        driveModeCurrent = driveModeTurnByEncoders;
+        //Settings.chassis_Width must be in centimeters.
+        distance2TargetCM = degrees / 360 * Math.PI * Settings.chassis_Width;
+
+        // an attempt to bake some overshoot into the calculation
+        if (distance2TargetCM > 3) {
+            distance2TargetCM = distance2TargetCM - 3;
+        }
+        leftDriveMotor.setPower(leftMotorPower);
+        rightDriveMotor.setPower(rightMotorPower);
+
+    } //cmdTurnByEncoder
+
+    private void executeTurnByEncoder(){
+
+        if (getCMTraveled() >= distance2TargetCM) {
+            moveIsComplete = true;
+            driveModeCurrent = driveModeStopped;
+            leftDriveMotor.setPower(0);
+            rightDriveMotor.setPower(0);
+        }
+
+    } //executeTurnByEncoder
 
 }

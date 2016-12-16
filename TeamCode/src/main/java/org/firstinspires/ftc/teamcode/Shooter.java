@@ -23,8 +23,8 @@ public class Shooter extends OpMode {
     private double shooterRPMsetPoint = 0;
     private ElapsedTime shotTimer = null;   //time for trigger reset
     private ElapsedTime speedControlerInitTimer = null;
-    public double timeTriggerUp = 1.0;
-    public double timeTriggerDown = 2.0;
+    public double timeTriggerUp =2.0;
+    public double timeTriggerDown = 3.0;
 
     private double leftshooterSpeedRPM = 0;
     private double rightshooterSpeedRPM = 0;

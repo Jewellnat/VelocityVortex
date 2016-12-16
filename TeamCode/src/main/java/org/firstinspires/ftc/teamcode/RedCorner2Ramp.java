@@ -57,9 +57,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class RedCorner2Ramp extends OpMode {
     /* Declare OpMode members. */
 
-    public static int stage_0PreStart =0;
+    public static int stage_0PreStart = 0;
     public static int stage_1DriveForward = 10;
-    public static int stage_2DobuleShot =20;
+    public static int stage_2DobuleShot = 20;
+    public static int stage_25wait = 25;
     public static int stage_3TurnLeft = 30;
     public static int stage_4DriveStraight = 40;
     public static int stage_5TurnLeftAgain = 50;
@@ -113,9 +114,9 @@ public class RedCorner2Ramp extends OpMode {
     public void start() {
 
         runtime.reset();
-        stage = stage_0PreStart;;
+        stage = stage_0PreStart;
         robotChassis.start();
-        }
+    }
 
 
     /*
@@ -136,51 +137,60 @@ public class RedCorner2Ramp extends OpMode {
             robotChassis.cmdDriveStraightByGyro(.7, 0, 45);
         }
 
-        if (stage == stage_1DriveForward){
-            if (robotChassis.isMoveComplete()){
+        if (stage == stage_1DriveForward) {
+            if (robotChassis.isMoveComplete()) {
                 //start Stage 2
-                stage =stage_2DobuleShot;
+                stage = stage_2DobuleShot;
                 doubleShooter.start();
             }
         }
 
-        if (stage == stage_2DobuleShot){
+        if (stage == stage_2DobuleShot) {
             doubleShooter.loop();
-            if (doubleShooter.isDone()){
+            if (doubleShooter.isDone()) {
                 //start Stage 3
-                stage = stage_3TurnLeft;
-                robotChassis.cmdTurnByGyro(-Settings.chassis_TurnMotorPower, Settings.chassis_TurnMotorPower,-30);
+                //stage = stage_25wait;
+                stage = stage_7Done;
             }
         }
-
-
-        if (stage == stage_3TurnLeft){
+        if (stage == stage_25wait) {
             //loop for a little bit longer on the dobule shot
             doubleShooter.loop();
-            if (robotChassis.isMoveComplete()){
+            if (runtime.seconds() > 20) {
+                //start stage 4
+                stage = stage_3TurnLeft;
+                robotChassis.cmdTurnByEncoder(-Settings.chassis_TurnMotorPower, Settings.chassis_TurnMotorPower, -35);
+            }
+        }
+
+
+        if (stage == stage_3TurnLeft) {
+            //loop for a little bit longer on the dobule shot
+            doubleShooter.loop();
+            if (robotChassis.isMoveComplete()) {
                 //start stage 4
                 stage = stage_4DriveStraight;
-                robotChassis.cmdDriveStraightByGyro (.9, -45, 280);
+                robotChassis.cmdDriveStraightByGyro(.5, -35, 190);
             }
         }
 
-        if (stage == stage_4DriveStraight){
-            if (robotChassis.isMoveComplete()){
+        if (stage == stage_4DriveStraight) {
+            if (robotChassis.isMoveComplete()) {
                 //start Stage 5
-                stage = stage_5TurnLeftAgain;
-                robotChassis.cmdTurnByGyro(-Settings.chassis_TurnMotorPower, Settings.chassis_TurnMotorPower, -90);
+                stage = stage_7Done;
+                //robotChassis.cmdTurnByGyro(-Settings.chassis_TurnMotorPower, Settings.chassis_TurnMotorPower, -60);
             }
         }
 
-        if (stage == stage_5TurnLeftAgain){
-            if (robotChassis.isMoveComplete()){
+        if (stage == stage_5TurnLeftAgain) {
+            if (robotChassis.isMoveComplete()) {
                 stage = stage_6ClimbRamp;
-                robotChassis.cmdDriveStraightByGyro(.5, -90, 45);
+                robotChassis.cmdDriveStraightByGyro(.7, -60, 25);
             }
         }
 
-        if (stage == stage_6ClimbRamp){
-            if (robotChassis.isMoveComplete()){
+        if (stage == stage_6ClimbRamp) {
+            if (robotChassis.isMoveComplete()) {
                 isDone = true;
                 stage = stage_7Done;
             }

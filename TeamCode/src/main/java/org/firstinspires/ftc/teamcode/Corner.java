@@ -154,8 +154,8 @@ public class Corner extends OpMode {
         }
         if (stage == Settings.stage2Charge) {
 
-            leftDriveMotor.setPower(Settings.driveSpeed);
-            rightDriveMotor.setPower(Settings.driveSpeed);
+            leftDriveMotor.setPower(Settings.driveSpeedL);
+            rightDriveMotor.setPower(Settings.driveSpeedR);
 
             double leftcm = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
             double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());

@@ -19,9 +19,9 @@ public class Settings {
     public static int stageShooterSpinUp = 0;
     public static double normalDriveSpeed = 0.75;
     public static int cornerDriveDistance = 155;
-    public static int middleDriveDistance = 130;
+    public static int middleDriveDistance = 100;
     public static int redTapeLightVal = 99;
-    public static double GearRatio = 1 / 1.5; //motor revoulutions /wheel revoulutions
+    public static double GearRatio = 1 / 1; //motor revoulutions /wheel revoulutions
     public final static int ticsPerRevoulution = 1440;
     public final static double wheelCircumfence = 8*Math.PI; //wheel diameter * PI
     public static double TicsPerCM = (GearRatio *ticsPerRevoulution)/wheelCircumfence;
@@ -42,7 +42,8 @@ public class Settings {
     public static int stage1FIRE = 1;
     public static int stage2Charge = 2;
     public static int stage3Stop = 3;
-    public static double driveSpeed = 1;
+    public static double driveSpeedL = -1;
+    public static double driveSpeedR = driveSpeedL * .82;
     public static double spinnerShooterMiddle = .25;
     public static int shooterTicksPerRev = 28;
     public static int shooterMotorMaxRPM = 6000;
@@ -51,21 +52,21 @@ public class Settings {
     public static double posTriggerTol = .0;
     public static int stage3turn180 = 3;
     public static int stage4backup = 4;
-    public static int middleBackupDriveDistance = -30;
+    public static int middleBackupDriveDistance = -20;
     public static int stage5stop = 5;
     public static int stageCornerShoot1Drive = 1;
     public static int stageConerShoot2Shoot = 2;
     public static int stageConerShoot3Stop = 3;
     public static int cornerShootDriveDistence = 16;
-
+    public static int driveMoterMaxTicksPerSec = 150 * ticsPerRevoulution / 60; //motor rpm * ticsPerRevoulution / 60 sec
 
     //Chassis settings
     public static double chassis_KPLineFollow = .3;
     public static double chassis_KPGyroStraight = .003;
     public static int  chassis_GyroHeadingTol = 7;
     public static int chassis_TurnMilliSeconds = 5000;
-    public static double chassis_TurnMotorPower = .3;
-
+    public static double chassis_TurnMotorPower = .25;
+    public static double chassis_Width = 42;
     public static double Tics2CM (int tics){
 
         return tics / TicsPerCM;
