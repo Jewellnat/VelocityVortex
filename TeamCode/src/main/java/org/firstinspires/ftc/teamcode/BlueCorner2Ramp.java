@@ -54,16 +54,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name = "RedCorner2Ramp", group = "")  // @Autonomous(...) is the other common choice
 
-public class RedCorner2Ramp extends OpMode {
+public class BlueCorner2Ramp extends OpMode {
     /* Declare OpMode members. */
 
     public static int stage_0PreStart = 0;
     public static int stage_1DriveForward = 10;
     public static int stage_2DobuleShot = 20;
     public static int stage_25wait = 25;
-    public static int stage_3TurnLeft = 30;
+    public static int stage_3TurnRight = 30;
     public static int stage_4DriveStraight = 40;
-    public static int stage_5TurnLeftAgain = 50;
+    public static int stage_5TurnRightAgain = 50;
     public static int stage_6ClimbRamp = 60;
     public static int stage_7Done = 70;
 
@@ -150,21 +150,21 @@ public class RedCorner2Ramp extends OpMode {
             if (doubleShooter.isDone()) {
                 //start Stage 3
                 //stage = stage_25wait;
-                stage = stage_7Done;
+                stage = stage_25wait;
             }
         }
         if (stage == stage_25wait) {
             //loop for a little bit longer on the dobule shot
             doubleShooter.loop();
-            if (runtime.seconds() > 20) {
+            if (runtime.seconds() > 12) {
                 //start stage 4
-                stage = stage_3TurnLeft;
-                robotChassis.cmdTurnByGyro(-Settings.chassis_TurnMotorPower, Settings.chassis_TurnMotorPower, -35);
+                stage = stage_3TurnRight;
+                robotChassis.cmdTurnByGyro(-Settings.chassis_TurnMotorPower, Settings.chassis_TurnMotorPower, 35);
             }
         }
 
 
-        if (stage == stage_3TurnLeft) {
+        if (stage == stage_3TurnRight) {
             //loop for a little bit longer on the dobule shot
             doubleShooter.loop();
             if (robotChassis.isMoveComplete()) {
@@ -182,7 +182,7 @@ public class RedCorner2Ramp extends OpMode {
             }
         }
 
-        if (stage == stage_5TurnLeftAgain) {
+        if (stage == stage_5TurnRightAgain) {
             if (robotChassis.isMoveComplete()) {
                 stage = stage_6ClimbRamp;
                 robotChassis.cmdDriveStraightByGyro(.7, -60, 25);
