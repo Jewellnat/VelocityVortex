@@ -286,7 +286,7 @@ public class Chassis extends OpMode {
             rightPower = 1;
         }
         leftDriveMotor.setPower(leftPower);
-        rightDriveMotor.setPower(rightPower);
+        rightDriveMotor.setPower(rightPower * Settings.chassis_KMotorBalance);
 
         if (getCMTraveled() >= distance2TargetCM) {
             moveIsComplete = true;

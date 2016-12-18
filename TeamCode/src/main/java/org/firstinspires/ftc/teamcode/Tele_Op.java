@@ -134,8 +134,8 @@ public class Tele_Op extends OpMode {
         ballShooter.loop();
         //telemetry.addData("Status", shootTrigger.getPosition());
         telemetry.addData("Status", "Running: " + runtime.toString());
-        leftDriveMotor.setPower(joystickMath(-gamepad1.left_stick_y));
-        rightDriveMotor.setPower(joystickMath(-gamepad1.right_stick_y));
+        leftDriveMotor.setPower(joystickMath(gamepad1.left_stick_y));
+        rightDriveMotor.setPower(joystickMath(gamepad1.right_stick_y));
         if (gamepad2.right_trigger == 1 && rightTriggerPressed == false) {
             rightTriggerPressed = true;
 

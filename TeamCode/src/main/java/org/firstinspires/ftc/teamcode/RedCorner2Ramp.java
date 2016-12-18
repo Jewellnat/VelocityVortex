@@ -134,7 +134,7 @@ public class RedCorner2Ramp extends OpMode {
             //Start Stage 1
             stage = stage_1DriveForward;
             robotChassis.setShooterFront();
-            robotChassis.cmdDriveStraightByGyro(.7, 0, 45);
+            robotChassis.cmdDriveStraightByGyro( 1, 0, Settings.cornerShootDriveDistence);
         }
 
         if (stage == stage_1DriveForward) {
@@ -149,17 +149,16 @@ public class RedCorner2Ramp extends OpMode {
             doubleShooter.loop();
             if (doubleShooter.isDone()) {
                 //start Stage 3
-                //stage = stage_25wait;
-                stage = stage_7Done;
+                stage = stage_25wait;
             }
         }
         if (stage == stage_25wait) {
             //loop for a little bit longer on the dobule shot
             doubleShooter.loop();
-            if (runtime.seconds() > 20) {
+            if (runtime.seconds() > 10) {
                 //start stage 4
                 stage = stage_3TurnLeft;
-                robotChassis.cmdTurnByGyro(-Settings.chassis_TurnMotorPower, Settings.chassis_TurnMotorPower, -35);
+                robotChassis.cmdTurnByGyro(-Settings.chassis_TurnMotorPower, Settings.chassis_TurnMotorPower, -45);
             }
         }
 
@@ -170,11 +169,12 @@ public class RedCorner2Ramp extends OpMode {
             if (robotChassis.isMoveComplete()) {
                 //start stage 4
                 stage = stage_4DriveStraight;
-                robotChassis.cmdDriveStraightByGyro(.5, -35, 190);
+                robotChassis.cmdDriveStraightByGyro(1, -45, 195);
             }
         }
 
         if (stage == stage_4DriveStraight) {
+            doubleShooter.loop();
             if (robotChassis.isMoveComplete()) {
                 //start Stage 5
                 stage = stage_7Done;

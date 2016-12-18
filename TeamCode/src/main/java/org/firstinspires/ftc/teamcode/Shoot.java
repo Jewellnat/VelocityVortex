@@ -147,7 +147,7 @@ public class Shoot extends OpMode {
 
         if (stage == stageSpinDownDelay) {
             //This delay makes sure ball is gone before shutting down shooter
-            if (runtime.time() > 1.0) {
+            if (runtime.time() > 2.0) {
                 stage = stageTurnOffShooters;
                 runtime.reset();
             }

@@ -34,6 +34,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -52,29 +54,22 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name = "BlueCorner2Ramp", group = "")  // @Autonomous(...) is the other common choice
+@Autonomous(name = "Corner2Center", group = "")  // @Autonomous(...) is the other common choice
 
-public class BlueCorner2Ramp extends OpMode {
+public class Corner2Center extends OpMode {
     /* Declare OpMode members. */
-
-    public static int stage_0PreStart = 0;
-    public static int stage_1DriveForward = 10;
-    public static int stage_2DobuleShot = 20;
-    public static int stage_25wait = 25;
-    public static int stage_3TurnRight = 30;
-    public static int stage_4DriveStraight = 40;
-    public static int stage_5TurnRightAgain = 50;
-    public static int stage_6ClimbRamp = 60;
-    public static int stage_7Done = 70;
-
-    private boolean isDone = false;
-
     Shoot doubleShooter = new Shoot();
-    Chassis robotChassis = new Chassis();
     private ElapsedTime runtime = new ElapsedTime();
+    private DcMotor leftShootMotor = null;
+    private DcMotor rightShootMotor = null;
+    private DcMotor leftDriveMotor = null;
+    private DcMotor rightDriveMotor = null;
+    private GyroSensor gyroSensor = null;
+    private DcMotor sweeperMotor = null;
     private Servo beaconServo = null;
+    //privste ColorSensor colorSensor = null;
 
-    int stage = stage_0PreStart;
+    int stage;
 
 
     /*
@@ -82,20 +77,24 @@ public class BlueCorner2Ramp extends OpMode {
      */
     @Override
     public void init() {
+        telemetry.addData("Status", "Initialized");
 
+
+        leftDriveMotor = hardwareMap.dcMotor.get("leftDriveMotor");
+        rightDriveMotor = hardwareMap.dcMotor.get("rightDriveMotor");
+        leftDriveMotor.setDirection(DcMotor.Direction.REVERSE);
+        gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
+        sweeperMotor = hardwareMap.dcMotor.get("sweeperMotor");
         //colorSensor = hardwareMap.colorSensor.get("colorSensor");
         beaconServo = hardwareMap.servo.get("bacon");
-
+        leftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        gyroSensor.calibrate();
         doubleShooter.hardwareMap = hardwareMap;
         doubleShooter.telemetry = telemetry;
         doubleShooter.init();
-
-        robotChassis.hardwareMap = hardwareMap;
-        robotChassis.telemetry = telemetry;
-        robotChassis.init();
-
-        telemetry.addData("Status", "Initialized");
-
     }
 
     /*
@@ -114,8 +113,8 @@ public class BlueCorner2Ramp extends OpMode {
     public void start() {
 
         runtime.reset();
-        stage = stage_0PreStart;
-        robotChassis.start();
+        stage = Settings.stageCornerShoot1Drive;
+       // doubleShooter.start();
     }
 
 
@@ -126,75 +125,64 @@ public class BlueCorner2Ramp extends OpMode {
 
     public void loop() {
 
-        telemetry.addData("Status", "Running: " + stage);
+        telemetry.addData("Status", "Running: " + runtime.toString());
+        telemetry.addData("Status", "encoderTicks left   " + leftDriveMotor.getCurrentPosition());
+        telemetry.addData("Status", "encoderTicks  right" +
+                "  " + rightDriveMotor.getCurrentPosition());
+        telemetry.addData("status", "gyroPosition " + gyroSensor.getHeading());
 
-        robotChassis.loop();
 
-        if (stage == stage_0PreStart) {
-            //Start Stage 1
-            stage = stage_1DriveForward;
-            robotChassis.setShooterFront();
-            robotChassis.cmdDriveStraightByGyro(1, 0, Settings.cornerShootDriveDistence);
-        }
 
-        if (stage == stage_1DriveForward) {
-            if (robotChassis.isMoveComplete()) {
-                //start Stage 2
-                stage = stage_2DobuleShot;
+
+
+        if (stage == Settings.stageCornerShoot1Drive) {
+            leftDriveMotor.setPower(Settings.driveSpeedL);
+            rightDriveMotor.setPower(Settings.driveSpeedR);
+            double leftcm = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
+            double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
+            double averagecm = (leftcm + rightcm) / 2;
+            if (Math.abs(averagecm) > Settings.cornerShootDriveDistence) {
+                stage = Settings.stageConerShoot2Shoot;
+                leftDriveMotor.setPower(0);
+                rightDriveMotor.setPower(0);
                 doubleShooter.start();
+
             }
         }
 
-        if (stage == stage_2DobuleShot) {
+        if (stage == Settings.stageConerShoot2Shoot) {
             doubleShooter.loop();
-            if (doubleShooter.isDone()) {
-                //start Stage 3
-                stage = stage_25wait;
+            leftDriveMotor.setPower(0);
+            rightDriveMotor.setPower(0);
+            if (runtime.seconds()>18) {
+                stage = Settings.stage2Charge ;
             }
         }
-        if (stage == stage_25wait) {
-            //loop for a little bit longer on the dobule shot
+
+        if (stage == Settings.stage2Charge) {
+            leftDriveMotor.setPower(Settings.driveSpeedL);
+            rightDriveMotor.setPower(Settings.driveSpeedR);
+            double leftcm = Settings.Tics2CM(leftDriveMotor.getCurrentPosition());
+            double rightcm = Settings.Tics2CM(rightDriveMotor.getCurrentPosition());
+            double averagecm = (leftcm + rightcm) / 2;
             doubleShooter.loop();
-            if (runtime.seconds() > 10) {
-                //start stage 4
-                stage = stage_3TurnRight;
-                robotChassis.cmdTurnByGyro(Settings.chassis_TurnMotorPower, -Settings.chassis_TurnMotorPower, 45);
+            if (Math.abs(averagecm) > 160) {
+                leftDriveMotor.setPower(0);
+                rightDriveMotor.setPower(0);
+                stage = Settings.stageConerShoot3Stop;
             }
         }
 
 
-        if (stage == stage_3TurnRight) {
-            //loop for a little bit longer on the dobule shot
-            doubleShooter.loop();
-            if (robotChassis.isMoveComplete()) {
-                //start stage 4
-                stage = stage_4DriveStraight;
-                robotChassis.cmdDriveStraightByGyro(1, 45, 195);
-            }
+        if (stage == Settings.stageConerShoot3Stop) {
+            leftDriveMotor.setPower(0);
+            rightDriveMotor.setPower(0);
+
+
         }
 
-        if (stage == stage_4DriveStraight) {
-            doubleShooter.loop();
-            if (robotChassis.isMoveComplete()) {
-                //start Stage 5
-                stage = stage_7Done;
-                //robotChassis.cmdTurnByGyro(-Settings.chassis_TurnMotorPower, Settings.chassis_TurnMotorPower, -60);
-            }
-        }
-
-        if (stage == stage_5TurnRightAgain) {
-            if (robotChassis.isMoveComplete()) {
-                stage = stage_6ClimbRamp;
-                robotChassis.cmdDriveStraightByGyro(.7, -60, 25);
-            }
-        }
-
-        if (stage == stage_6ClimbRamp) {
-            if (robotChassis.isMoveComplete()) {
-                isDone = true;
-                stage = stage_7Done;
-            }
-        }
 
     }
+
+
 }
